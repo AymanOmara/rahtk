@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="error" xml:space="preserve">
+        <value>خطا</value>
+    </data>
+    <data name="success" xml:space="preserve">
+        <value>نجاح</value>
+    </data>
+    <data name="invalid_user_name" xml:space="preserve">
+        <value>اسم المستخدم غير صالح</value>
+    </data>
+    <data name="invalid_password" xml:space="preserve">
+        <value>كلمة المرور غير صالحة</value>
+    </data>
+    <data name="token_not_found" xml:space="preserve">
+        <value>الرمز غير موجود</value>
+    </data>
+    <data name="user_already_exists" xml:space="preserve">
+        <value>المستخدم موجود بالفعل</value>
+    </data>
+    <data name="user_created_success_fully" xml:space="preserve">
+        <value>تم إنشاء المستخدم بنجاح</value>
+    </data>
+    <data name="deposite_cannot_gratter_than_price" xml:space="preserve">
+        <value>الإيداع لا يمكن أن يكون أكبر من السعر</value>
+    </data>
+    <data name="event_not_found" xml:space="preserve">
+        <value>الحدث غير موجود</value>
+    </data>
+    <data name="reserve_past_date_not_allowed" xml:space="preserve">
+        <value>غير مسموح بحجز التواريخ السابقة</value>  
+    </data>
+    <data name="error_try_again_later" xml:space="preserve">
+        <value>خطأ، يرجى المحاولة مرة أخرى لاحقًا</value>
+    </data>
+    <data name="please_add_order_items" xml:space="preserve">
+        <value>يرجى إضافة عناصر الطلب</value>
+    </data>
+    <data name="no_current_active_shift" xml:space="preserve">
+        <value>لا يوجد تحويل نشط حاليًا</value>
+    </data>
+    <data name="error_start_shift_first" xml:space="preserve">
+        <value>ابدأ الوردية أولاً قبل البدء</value>
+    </data>
+    <data name="please_close_current_shift_first" xml:space="preserve">
+        <value>يرجى إغلاق الوردية الحالية أولاً</value>
+    </data>
+    <data name="the_table_alerdy_has_active_order" xml:space="preserve">
+        <value>الطاولة تحتوي بالفعل على طلب نشط</value>
+    </data>
+    <data name="error_try_later" xml:space="preserve">
+        <value>حدث خطأ، يرجى المحاولة لاحقًا</value>
+    </data>
+</root>
