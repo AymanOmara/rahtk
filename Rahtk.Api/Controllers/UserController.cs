@@ -16,7 +16,7 @@ namespace Rahtk.Api.Controllers
             _userService = userService;
         }
 
-        [HttpPost("login")]
+        [HttpPost("register")]
         public async Task<IActionResult> Login([FromBody] RegistrationDTO dto)
         {
             var result = await _userService.CreateUser(dto);

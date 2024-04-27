@@ -1,16 +1,9 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using Rahtk.Domain.Features.User;
-using Microsoft.OpenApi.Models;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Rahtk.IOC;
 using Rahtk.Shared;
-using Rahtk.Infrastructure.EF.Contexts;
 using Rahtk.Api.Utils;
-using System.Text;
+using Rahtk.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,11 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.RegisterServices(builder.Configuration);
+builder.Services.RegisterIOCServices(builder.Configuration);
+builder.Services.SetUpApiServices(builder.Configuration);
 
-builder.Services.AddIdentity<RahtkUser, IdentityRole>()
-    .AddEntityFrameworkStores<RahtkContext>()
-    .AddDefaultTokenProviders();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -37,36 +28,6 @@ builder.Services.AddSwaggerGen(options =>
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
     options.OperationFilter<AddRequiredHeaderParameter>();
-});
-
-
-builder.Services.AddMvc().AddViewLocalization().AddDataAnnotationsLocalization(options =>
-    options.DataAnnotationLocalizerProvider = (type, factory) =>
-    {
-        var assemblyName = new AssemblyName(typeof(SharedResource).GetTypeInfo().Assembly.FullName);
-        return factory.Create(nameof(SharedResource), assemblyName.Name);
-    });
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateIssuerSigningKey = true,
-        ValidAudience = builder.Configuration["JWT:Audience"],
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
-        //RequireExpirationTime = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(
-            builder.Configuration["Jwt:Key"]
-            ))
-    };
 });
 
 builder.Services
@@ -82,8 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
-app.UseRequestLocalization(localizationOptions.Value);
+app.UseLocalization();
 app.UseHttpsRedirection();
 app.UseShared();
 app.UseAuthentication();

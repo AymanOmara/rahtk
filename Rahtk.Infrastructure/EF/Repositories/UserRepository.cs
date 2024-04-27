@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Rahtk.Contracts.Features.User;
 using Rahtk.Domain.Features.User;
 using Rahtk.Infrastructure.EF.Contexts;
-using Rahtk.Shared;
+using Rahtk.Shared.Localization;
 using Rahtk.Shared.Models;
 
 namespace Rahtk.Infrastructure.EF.Repositories

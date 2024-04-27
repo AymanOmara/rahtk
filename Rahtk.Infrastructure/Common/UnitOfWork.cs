@@ -5,7 +5,7 @@ using Rahtk.Contracts.Features.User;
 using Rahtk.Domain.Features.User;
 using Rahtk.Infrastructure.EF.Contexts;
 using Rahtk.Infrastructure.EF.Repositories;
-using Rahtk.Shared;
+using Rahtk.Shared.Localization;
 
 namespace Rahtk.Infrastructure.Common
 {

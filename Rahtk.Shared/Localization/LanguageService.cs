@@ -1,7 +1,7 @@
-﻿using System.Reflection;
-using Microsoft.Extensions.Localization;
+﻿using Microsoft.Extensions.Localization;
+using System.Reflection;
 
-namespace Rahtk.Shared
+namespace Rahtk.Shared.Localization
 {
     public class SharedResource
     {

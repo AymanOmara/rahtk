@@ -12,5 +12,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Rahtk.Shared\Rahtk.Shared.csproj" />
     <ProjectReference Include="..\Rahtk.Infrastructure\Rahtk.Infrastructure.csproj" />
+    <ProjectReference Include="..\Rahtk.Application\Rahtk.Application.csproj" />
   </ItemGroup>
 </Project>

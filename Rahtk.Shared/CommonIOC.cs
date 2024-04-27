@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
+using Rahtk.Shared.Localization;
 
 namespace Rahtk.Shared
 {
@@ -11,7 +12,7 @@ namespace Rahtk.Shared
         public static void RegisterLocalizationService(this IServiceCollection services)
         {
             services.AddSingleton<LanguageService>();
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddLocalization(options => options.ResourcesPath = "Localization.Resources");
 
             services.Configure<RequestLocalizationOptions>(options =>
             {
