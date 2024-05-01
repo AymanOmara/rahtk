@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Rahtk.Api.Utils;
 using Rahtk.Application.Features;
 using Rahtk.Domain.Features.User;
+using Rahtk.Shared.Models;
 
 namespace Rahtk.Api.Controllers
 {
@@ -41,6 +42,11 @@ namespace Rahtk.Api.Controllers
         {
             var result = await _userService.EmailVerification(email);
             return result.toResult();
+        }
+        [HttpGet("GetApi")]
+        public async Task<IActionResult> GetApi()
+        {
+            return new BaseResponse<string> {data = "test",success = true } .toResult();
         }
     }
 
