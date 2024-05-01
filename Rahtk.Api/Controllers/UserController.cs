@@ -8,6 +8,7 @@ using Rahtk.Shared.Models;
 namespace Rahtk.Api.Controllers
 {
     //[Authorize]
+    [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
