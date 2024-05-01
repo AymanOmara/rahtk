@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Rahtk.Contracts.Common;
 using Rahtk.Infrastructure.Common;
 using Rahtk.Infrastructure.EF.Contexts;
+using Rahtk.Infrastructure.EF.Services;
 
 namespace Rahtk.Infrastructure.EF
 {
@@ -12,6 +13,7 @@ namespace Rahtk.Infrastructure.EF
 
         public static void RegisterInfrastructureDependancy(this IServiceCollection services, IConfiguration configuration) {
             AddSQL(services, configuration);
+            services.AddScoped<IUserNotifier, UserNotifier>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
         

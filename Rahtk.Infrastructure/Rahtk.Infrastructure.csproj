@@ -12,6 +12,7 @@
     <None Remove="EF\Repositories\" />
     <None Remove="EF\Migrations\" />
     <None Remove="Common\" />
+    <None Remove="EF\Services\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EF\" />
@@ -19,6 +20,7 @@
     <Folder Include="EF\Repositories\" />
     <Folder Include="EF\Migrations\" />
     <Folder Include="Common\" />
+    <Folder Include="EF\Services\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
@@ -32,6 +34,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="SendGrid" Version="9.29.3" />
+    <PackageReference Include="MailKit" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rahtk.Shared\Rahtk.Shared.csproj" />

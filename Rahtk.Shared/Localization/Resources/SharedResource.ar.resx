@@ -63,4 +63,17 @@
     <data name="error_try_later" xml:space="preserve">
         <value>حدث خطأ، يرجى المحاولة لاحقًا</value>
     </data>
+    <data name="user_logged_in_successfully" xml:space="preserve">
+        <value>تم تسجيل الدخول بنجاح</value>
+    </data>
+    <data name="email_not_exists" xml:space="preserve">
+        <value>لا يوجد مستخدم بهذا البريد الالكتروني</value>
+    </data>
+    <data name="your_email_verification_is" xml:space="preserve">
+        <value>رمز التحقق الخاص بك هوا </value>
+    </data>
+        <data name="your_email_verification_is" xml:space="preserve">
+        <value>رمز التحقق الخاص بك هوا</value>
+    </data>
+    
 </root>

@@ -63,4 +63,17 @@
     <data name="error_try_later" xml:space="preserve">
         <value>An error occurred, please try again later</value>
     </data>
+    <data name="user_logged_in_successfully" xml:space="preserve">
+        <value>User Logged in SuccessFully</value>
+    </data>
+    <data name="email_not_exists" xml:space="preserve">
+        <value>The Email address You Provided Does not match any existing user</value>
+    </data>
+     <data name="verfification_email_sent" xml:space="preserve">
+        <value>Verification email sent successfully.</value>
+    </data>
+    <data name="your_email_verification_is" xml:space="preserve">
+        <value>Your Verification code Is.</value>
+    </data>
+    
 </root>

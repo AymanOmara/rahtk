@@ -17,9 +17,29 @@ namespace Rahtk.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Login([FromBody] RegistrationDTO dto)
+        public async Task<IActionResult> Register([FromBody] RegistrationDTO dto)
         {
             var result = await _userService.CreateUser(dto);
+            return result.toResult();
+        }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
+        {
+            var result = await _userService.Login(dto);
+            return result.toResult();
+        }
+
+        [HttpPost("socailLogin")]
+        public async Task<IActionResult> SocailLogin([FromBody] LoginDTO dto)
+        {
+            var result = await _userService.SocailLogin(dto);
+            return result.toResult();
+        }
+
+        [HttpPost("emailVerification")]
+        public async Task<IActionResult> EmailVerification([FromBody] string email)
+        {
+            var result = await _userService.EmailVerification(email);
             return result.toResult();
         }
     }
