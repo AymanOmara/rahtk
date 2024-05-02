@@ -25,6 +25,7 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Utils\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rahtk.Shared\Rahtk.Shared.csproj">
@@ -39,5 +40,8 @@
     <ProjectReference Include="..\Rahtk.Application\Rahtk.Application.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\" />
   </ItemGroup>
 </Project>
