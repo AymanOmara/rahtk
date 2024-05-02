@@ -11,7 +11,11 @@ namespace Rahtk.Contracts.Features.User
 
         Task<Result<TokenModel, Exception>> SocailLogin(LoginDTO login);
 
-        Task<Result<String, Exception>> EmailVerification(String email);
+        Task<Result<string, Exception>> EmailVerification(string email);
+
+        Task<Result<string, Exception>> VerifyOTP(string otp, string email);
+
+        Task<Result<string, Exception>> ForgetPassword(ForgetPasswordModel forgetPassword);
     }
 }
 

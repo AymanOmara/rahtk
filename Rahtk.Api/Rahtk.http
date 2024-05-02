@@ -1,6 +1,0 @@
-﻿@Rahtk_HostAddress = http://localhost:443
-
-GET {{Rahtk_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

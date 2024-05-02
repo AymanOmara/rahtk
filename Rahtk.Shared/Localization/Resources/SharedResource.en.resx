@@ -75,5 +75,15 @@
     <data name="your_email_verification_is" xml:space="preserve">
         <value>Your Verification code Is.</value>
     </data>
+    <data name="wrong_otp" xml:space="preserve">
+        <value>Wrong OTP entered. Please try again.</value>
+    </data>
+    <data name="correct_otp" xml:space="preserve">
+        <value>Correct OTP entered. Verification successful.</value>
+    </data>
+    <data name="password_changed_successfully" xml:space="preserve">
+        <value>Password changed successfully.</value>
+    </data>
+
     
 </root>

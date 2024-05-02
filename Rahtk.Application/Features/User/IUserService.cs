@@ -12,6 +12,10 @@ namespace Rahtk.Application.Features
         Task<BaseResponse<TokenModel>> SocailLogin(LoginDTO login);
 
         Task<BaseResponse<bool>> EmailVerification(string email);
+
+        Task<BaseResponse<bool>> VerifyOTP(string otp, string email);
+
+        Task<BaseResponse<bool>> ForgetPassword(ForgetPasswordModel forgetPassword);
     }
 }
 

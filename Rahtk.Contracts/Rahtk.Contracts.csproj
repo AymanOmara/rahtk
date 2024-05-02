@@ -20,4 +20,7 @@
     <ProjectReference Include="..\Rahtk.Domain\Rahtk.Domain.csproj" />
     <ProjectReference Include="..\Rahtk.Shared\Rahtk.Shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig" />
+  </ItemGroup>
 </Project>

@@ -72,8 +72,17 @@
     <data name="your_email_verification_is" xml:space="preserve">
         <value>رمز التحقق الخاص بك هوا </value>
     </data>
-        <data name="your_email_verification_is" xml:space="preserve">
-        <value>رمز التحقق الخاص بك هوا</value>
+    <data name="verfification_email_sent" xml:space="preserve">
+        <value>تم ارسال رمز التحقق علي البريد الالكتروني</value>
     </data>
-    
+    <data name="wrong_otp" xml:space="preserve">
+        <value>تم إدخال رمز التحقق الخاطئ. يرجى المحاولة مرة أخرى.</value>
+    </data>
+    <data name="correct_otp" xml:space="preserve">
+        <value>تم إدخال رمز التحقق الصحيح. التحقق ناجح.</value>
+    </data>
+    <data name="password_changed_successfully" xml:space="preserve">
+        <value>تم تغيير كلمة المرور بنجاح.</value>
+    </data>
+
 </root>

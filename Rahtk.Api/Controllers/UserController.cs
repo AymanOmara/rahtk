@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Rahtk.Api.Utils;
 using Rahtk.Application.Features;
 using Rahtk.Domain.Features.User;
-using Rahtk.Shared.Models;
 
 namespace Rahtk.Api.Controllers
 {
@@ -24,6 +22,7 @@ namespace Rahtk.Api.Controllers
             var result = await _userService.CreateUser(dto);
             return result.toResult();
         }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO dto)
         {
@@ -44,12 +43,18 @@ namespace Rahtk.Api.Controllers
             var result = await _userService.EmailVerification(email);
             return result.toResult();
         }
-        [HttpGet("GetApi")]
-        public async Task<IActionResult> GetApi()
-        {
-            return new BaseResponse<string> {data = "test",success = true } .toResult();
+
+        [HttpGet("verify-otp")]
+        public async Task<IActionResult> VerifyOTP(string email, string otp) {
+            var result = await _userService.VerifyOTP(email:email,otp:otp);
+            return result.toResult();
+        }
+
+        [HttpPost("forget-passwprd")]
+        public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordModel forgetPassword) {
+            var result = await _userService.ForgetPassword(forgetPassword);
+            return result.toResult();
         }
     }
-
 }
 

@@ -23,7 +23,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
         private readonly IConfiguration _configuration;
         private readonly IUserNotifier _userNotifier;
         public UserRepository(RahtkContext context, UserManager<RahtkUser> userManager, SignInManager<RahtkUser> signInManager, LanguageService localization, IConfiguration configuration, IUserNotifier userNotifier)
-		{
+        {
             _context = context;
             _signInManager = signInManager;
             _userManager = userManager;
@@ -33,7 +33,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
         }
 
-        public async Task<Result<string,Exception>> CreateUser(RegistrationDTO registration)
+        public async Task<Result<string, Exception>> CreateUser(RegistrationDTO registration)
         {
             var isUserExict = await IsUserExist(registration.Email);
             if (isUserExict)
@@ -54,7 +54,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
             {
                 return new Exception(string.Join(",", result.Errors.ToList()));
             }
-            
+
             return _localization.Getkey("user_created_success_fully").Value;
         }
 
@@ -94,7 +94,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
         {
             var roles = await _userManager.GetRolesAsync(user);
 
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? ""));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -102,9 +102,9 @@ namespace Rahtk.Infrastructure.EF.Repositories
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName ?? ""),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
                     new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"].ToString()),
                     new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"].ToString()),
                     new Claim("uid", user.Id),
@@ -132,7 +132,8 @@ namespace Rahtk.Infrastructure.EF.Repositories
                     EmailConfirmed = true,
                 };
                 var userCreationResult = await _userManager.CreateAsync(rahtkUser);
-                if (!userCreationResult.Succeeded) {
+                if (!userCreationResult.Succeeded)
+                {
                     return new Exception(_localization.Getkey("error_try_agian_later").Value);
                 }
                 user = rahtkUser;
@@ -143,20 +144,54 @@ namespace Rahtk.Infrastructure.EF.Repositories
             return token;
         }
 
-        public async Task<Result<String, Exception>> EmailVerification(String email) {
+        public async Task<Result<string, Exception>> EmailVerification(string email)
+        {
             var user = await _userManager.FindByEmailAsync(email);
             var isUserExist = user != null;
-            if (!isUserExist) {
+            if (!isUserExist)
+            {
                 return new Exception(_localization.Getkey("email_not_exists").Value);
             }
             Random random = new Random();
             int randomNumber = random.Next(1000, 10000);
             user.VerificationToken = randomNumber.ToString();
             await _userManager.UpdateAsync(user);
-            
-            await _userNotifier.Notify(email,$"{_localization.Getkey("your_email_verification_is").Value} {randomNumber}");
+
+            await _userNotifier.Notify(email, $"{_localization.Getkey("your_email_verification_is").Value} {randomNumber}");
             return _localization.Getkey("verfification_email_sent").Value;
+        }
+
+        public async Task<Result<string, Exception>> VerifyOTP(string otp, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var isUserExist = user != null;
+            if (!isUserExist)
+            {
+                return new Exception(_localization.Getkey("email_not_exists").Value);
+            }
+            if (otp != user.VerificationToken)
+            {
+                return new Exception(_localization.Getkey("wrong_otp").Value);
+            }
+            return _localization.Getkey("correct_otp").Value;
+        }
+
+        public async Task<Result<string, Exception>> ForgetPassword(ForgetPasswordModel forgetPassword)
+        {
+            var user = await _userManager.FindByEmailAsync(forgetPassword.Email);
+            var isUserExist = user != null;
+            if (!isUserExist)
+            {
+                return new Exception(_localization.Getkey("email_not_exists").Value);
+            }
+
+            if (user.VerificationToken != forgetPassword.OTP) {
+                return new Exception(_localization.Getkey("wrong_otp").Value);
+            }
+
+            await _userManager.AddPasswordAsync(user,forgetPassword.Password);
+
+            return _localization.Getkey("password_changed_successfully").Value;
         }
     }
 }
-
