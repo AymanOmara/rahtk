@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Rahtk.Contracts.Common;
@@ -185,13 +186,42 @@ namespace Rahtk.Infrastructure.EF.Repositories
                 return new Exception(_localization.Getkey("email_not_exists").Value);
             }
 
-            if (user.VerificationToken != forgetPassword.OTP) {
+            if (user.VerificationToken != forgetPassword.OTP)
+            {
                 return new Exception(_localization.Getkey("wrong_otp").Value);
             }
-
-            await _userManager.AddPasswordAsync(user,forgetPassword.Password);
-
+            await _userManager.RemovePasswordAsync(user);
+            await _userManager.AddPasswordAsync(user, forgetPassword.Password);
+            await _userManager.UpdateAsync(user);
             return _localization.Getkey("password_changed_successfully").Value;
+        }
+
+        public async Task<Result<string, Exception>> ChangePassword(string newPassword,string currentPassword, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            try
+            {
+                await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+            }
+            catch (Exception _)
+            {
+                return new Exception(_localization.Getkey("error_change_password").Value);
+            }
+            return _localization.Getkey("password_changed_successfully").Value;
+        }
+
+        public async Task<Result<TokenModel, Exception>> RefreshToken(TokenModel oldToken)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(us => us.RefreshToken == oldToken.RefreshToken);
+
+            if (user == null || user.RefreshToken == oldToken.RefreshToken)
+            {
+                return new Exception(_localization.Getkey("user_not_found").Value);
+            }
+            var token = await CreateJwtToken(user);
+            user.RefreshToken = token.RefreshToken;
+            await _userManager.UpdateAsync(user);
+            return token;
         }
     }
 }

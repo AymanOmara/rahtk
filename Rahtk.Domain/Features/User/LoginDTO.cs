@@ -10,4 +10,3 @@ namespace Rahtk.Domain.Features.User
         public string Password { get; set; }
     }
 }
-

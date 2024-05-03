@@ -9,11 +9,32 @@ namespace Rahtk.Application.Features.User
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly LanguageService _languageService;
+
         public UserService(IUnitOfWork unitOfWork, LanguageService languageService)
         {
 
             _unitOfWork = unitOfWork;
             _languageService = languageService;
+        }
+
+        public async Task<BaseResponse<bool>> ChangePassword(string newPassword, string currentPassword, string userId)
+        {
+            var result = await _unitOfWork.Users.ChangePassword(newPassword: newPassword, currentPassword, userId: userId);
+            if (!result.IsOk)
+            {
+                return new BaseResponse<bool>
+                {
+                    message = result.Error.Message,
+                    statusCode = 400,
+                };
+            }
+            return new BaseResponse<bool>
+            {
+                message = result.Value,
+                success = true,
+                statusCode = 200,
+                data = true,
+            };
         }
 
         public async Task<BaseResponse<bool>> CreateUser(RegistrationDTO registration)
@@ -22,11 +43,21 @@ namespace Rahtk.Application.Features.User
             var result = await _unitOfWork.Users.CreateUser(registration);
             if (!result.IsOk)
             {
-                return new BaseResponse<bool>() { message = result.Error.Message, statusCode = 400 };
+                return new BaseResponse<bool>()
+                {
+                    message = result.Error.Message,
+                    statusCode = 400
+                };
             }
             else
             {
-                return new BaseResponse<bool>() { message = result.Value, statusCode = 200, success = true, data = true };
+                return new BaseResponse<bool>()
+                {
+                    message = result.Value,
+                    statusCode = 200,
+                    success = true,
+                    data = true
+                };
             }
         }
 
@@ -36,11 +67,21 @@ namespace Rahtk.Application.Features.User
 
             if (!result.IsOk)
             {
-                return new BaseResponse<bool>() { message = result.Error.Message, statusCode = 400 };
+                return new BaseResponse<bool>()
+                {
+                    message = result.Error.Message,
+                    statusCode = 400,
+                };
             }
             else
             {
-                return new BaseResponse<bool>() { message = result.Value, statusCode = 200, success = true, data = true };
+                return new BaseResponse<bool>()
+                {
+                    message = result.Value,
+                    statusCode = 200,
+                    success = true,
+                    data = true
+                };
             }
         }
 
@@ -49,11 +90,21 @@ namespace Rahtk.Application.Features.User
             var result = await _unitOfWork.Users.ForgetPassword(forgetPassword);
             if (!result.IsOk)
             {
-                return new BaseResponse<bool>() { message = result.Error.Message, statusCode = 400 };
+                return new BaseResponse<bool>()
+                {
+                    message = result.Error.Message,
+                    statusCode = 400,
+                };
             }
             else
             {
-                return new BaseResponse<bool>() { message = result.Value, statusCode = 200, success = true ,data = true};
+                return new BaseResponse<bool>()
+                {
+                    message = result.Value,
+                    statusCode = 200,
+                    success = true,
+                    data = true,
+                };
             }
 
         }
@@ -64,12 +115,42 @@ namespace Rahtk.Application.Features.User
 
             if (!result.IsOk)
             {
-                return new BaseResponse<TokenModel>() { message = result.Error.Message, statusCode = 400 };
+                return new BaseResponse<TokenModel>()
+                {
+                    message = result.Error.Message,
+                    statusCode = 400,
+                };
             }
             else
             {
-                return new BaseResponse<TokenModel>() { message = _languageService.Getkey("user_logged_in_successfully").Value, statusCode = 200, success = true, data = result.Value, };
+                return new BaseResponse<TokenModel>()
+                {
+                    message = _languageService.Getkey("user_logged_in_successfully").Value,
+                    statusCode = 200,
+                    success = true,
+                    data = result.Value,
+                };
             }
+        }
+
+        public async Task<BaseResponse<TokenModel>> RefreshToken(TokenModel token)
+        {
+            var result = await _unitOfWork.Users.RefreshToken(token);
+            if (!result.IsOk)
+            {
+                return new BaseResponse<TokenModel>
+                {
+                    message = result.Error.Message,
+                    statusCode = 400,
+                };
+            }
+            return new BaseResponse<TokenModel>
+            {
+                data = result.Value,
+                statusCode = 200,
+                success = true,
+                message = _languageService.Getkey("token_refreshed_successfully").Value,
+            };
         }
 
         public async Task<BaseResponse<TokenModel>> SocailLogin(LoginDTO login)
@@ -78,11 +159,21 @@ namespace Rahtk.Application.Features.User
 
             if (!result.IsOk)
             {
-                return new BaseResponse<TokenModel>() { message = result.Error.Message, statusCode = 400 };
+                return new BaseResponse<TokenModel>()
+                {
+                    message = result.Error.Message,
+                    statusCode = 400,
+                };
             }
             else
             {
-                return new BaseResponse<TokenModel>() { message = _languageService.Getkey("user_logged_in_successfully").Value, statusCode = 200, success = true, data = result.Value, };
+                return new BaseResponse<TokenModel>()
+                {
+                    message = _languageService.Getkey("user_logged_in_successfully").Value,
+                    statusCode = 200,
+                    success = true,
+                    data = result.Value,
+                };
             }
         }
 
@@ -92,14 +183,23 @@ namespace Rahtk.Application.Features.User
 
             if (!result.IsOk)
             {
-                return new BaseResponse<bool>() { message = result.Error.Message, statusCode = 400 };
+                return new BaseResponse<bool>()
+                {
+                    message = result.Error.Message,
+                    statusCode = 400,
+                };
             }
             else
             {
-                return new BaseResponse<bool>() { message = result.Value, statusCode = 200, success = true };
+                return new BaseResponse<bool>()
+                {
+                    message = result.Value,
+                    statusCode = 200,
+                    success = true,
+                    data = true
+                };
             }
         }
-
     }
 }
 

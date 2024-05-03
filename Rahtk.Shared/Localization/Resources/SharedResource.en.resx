@@ -84,6 +84,11 @@
     <data name="password_changed_successfully" xml:space="preserve">
         <value>Password changed successfully.</value>
     </data>
+    <data name="token_refreshed_successfully" xml:space="preserve">
+        <value>Token refreshed successfully.</value>
+    </data>
+    <data name="user_not_found" xml:space="preserve">
+        <value>User not found.</value>
+    </data>
 
-    
 </root>

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Rahtk.Api.Utils;
 using Rahtk.Application.Features;
 using Rahtk.Domain.Features.User;
@@ -30,14 +32,21 @@ namespace Rahtk.Api.Controllers
             return result.toResult();
         }
 
-        [HttpPost("socailLogin")]
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] TokenModel token)
+        {
+            var result = await _userService.RefreshToken(token);
+            return result.toResult();
+        }
+
+        [HttpPost("socail-login")]
         public async Task<IActionResult> SocailLogin([FromBody] LoginDTO dto)
         {
             var result = await _userService.SocailLogin(dto);
             return result.toResult();
         }
 
-        [HttpPost("emailVerification")]
+        [HttpPost("email-verification")]
         public async Task<IActionResult> EmailVerification([FromBody] string email)
         {
             var result = await _userService.EmailVerification(email);
@@ -53,6 +62,15 @@ namespace Rahtk.Api.Controllers
         [HttpPost("forget-passwprd")]
         public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordModel forgetPassword) {
             var result = await _userService.ForgetPassword(forgetPassword);
+            return result.toResult();
+        }
+
+        [Authorize]
+        [HttpPost("change-passwprd")]
+        public async Task<IActionResult> ChangePassword(string newPassword,string currentPassword)
+        {
+            var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _userService.ChangePassword(newPassword,currentPassword, email ?? "");
             return result.toResult();
         }
     }

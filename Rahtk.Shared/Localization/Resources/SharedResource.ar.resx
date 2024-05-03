@@ -84,5 +84,11 @@
     <data name="password_changed_successfully" xml:space="preserve">
         <value>تم تغيير كلمة المرور بنجاح.</value>
     </data>
+    <data name="token_refreshed_successfully" xml:space="preserve">
+        <value>تم تجديد الرمز بنجاح.</value>
+    </data>
+    <data name="user_not_found" xml:space="preserve">
+        <value>المستخدم غير موجود.</value>
+    </data>
 
 </root>
