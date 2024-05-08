@@ -23,6 +23,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
         private readonly LanguageService _localization;
         private readonly IConfiguration _configuration;
         private readonly IUserNotifier _userNotifier;
+
         public UserRepository(RahtkContext context, UserManager<RahtkUser> userManager, SignInManager<RahtkUser> signInManager, LanguageService localization, IConfiguration configuration, IUserNotifier userNotifier)
         {
             _context = context;
@@ -47,6 +48,8 @@ namespace Rahtk.Infrastructure.EF.Repositories
                 Email = registration.Email,
                 UserName = registration.Email,
                 EmailConfirmed = true,
+                FirstName = registration.FirstName,
+                LastName = registration.LastName,
             };
 
             var result = await _userManager.CreateAsync(user, registration.Password);
@@ -131,6 +134,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
                     Email = login.Email,
                     UserName = login.Email,
                     EmailConfirmed = true,
+                    
                 };
                 var userCreationResult = await _userManager.CreateAsync(rahtkUser);
                 if (!userCreationResult.Succeeded)

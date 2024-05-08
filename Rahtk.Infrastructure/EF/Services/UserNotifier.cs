@@ -1,5 +1,4 @@
-﻿using MailKit;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 using Rahtk.Contracts.Common;
@@ -22,14 +21,14 @@ namespace Rahtk.Infrastructure.EF.Services
         {
             var mailMessage = new MimeMessage();
             mailMessage.From.Add(new MailboxAddress("NoReplay", _configuration["Email:Email"]));
-            mailMessage.To.Add(new MailboxAddress("to name", channel));
-            mailMessage.Subject = "subject";
-            mailMessage.Body = new TextPart("plain")
+            mailMessage.To.Add(new MailboxAddress(channel, channel));
+            mailMessage.Subject = _languageService.Getkey("email_verification").Value;
+            mailMessage.Body = new TextPart()
             {
                 Text = $"{_languageService.Getkey("your_email_verification_is").Value} {body}"
             };
 
-            using (var smtpClient = new SmtpClient(new ProtocolLogger("smtp.log")))
+            using (var smtpClient = new SmtpClient())
             {
                 smtpClient.CheckCertificateRevocation = false;
                 smtpClient.Connect("smtp.gmail.com", 587, false);

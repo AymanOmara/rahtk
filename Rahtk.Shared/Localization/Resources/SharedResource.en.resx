@@ -90,5 +90,9 @@
     <data name="user_not_found" xml:space="preserve">
         <value>User not found.</value>
     </data>
+    <data name="email_verification" xml:space="preserve">
+        <value>Email verification.</value>
+    </data>
+
 
 </root>

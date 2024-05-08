@@ -47,7 +47,7 @@ namespace Rahtk.Api.Controllers
         }
 
         [HttpPost("email-verification")]
-        public async Task<IActionResult> EmailVerification([FromBody] string email)
+        public async Task<IActionResult> EmailVerification(string email)
         {
             var result = await _userService.EmailVerification(email);
             return result.toResult();
@@ -59,14 +59,14 @@ namespace Rahtk.Api.Controllers
             return result.toResult();
         }
 
-        [HttpPost("forget-passwprd")]
+        [HttpPost("forget-password")]
         public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordModel forgetPassword) {
             var result = await _userService.ForgetPassword(forgetPassword);
             return result.toResult();
         }
 
         [Authorize]
-        [HttpPost("change-passwprd")]
+        [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword(string newPassword,string currentPassword)
         {
             var email = User.FindFirstValue(ClaimTypes.NameIdentifier);

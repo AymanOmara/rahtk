@@ -90,5 +90,8 @@
     <data name="user_not_found" xml:space="preserve">
         <value>المستخدم غير موجود.</value>
     </data>
+    <data name="email_verification" xml:space="preserve">
+        <value>التحقق من البريد الإلكتروني.</value>
+    </data>
 
 </root>
