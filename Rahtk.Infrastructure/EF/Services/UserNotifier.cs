@@ -20,7 +20,7 @@ namespace Rahtk.Infrastructure.EF.Services
         public async Task Notify(string channel, string body)
         {
             var mailMessage = new MimeMessage();
-            mailMessage.From.Add(new MailboxAddress("NoReplay", _configuration["Email:Email"]));
+            mailMessage.From.Add(new MailboxAddress("Ra7tk", _configuration["Email:Email"]));
             mailMessage.To.Add(new MailboxAddress(channel, channel));
             mailMessage.Subject = _languageService.Getkey("email_verification").Value;
             mailMessage.Body = new TextPart()

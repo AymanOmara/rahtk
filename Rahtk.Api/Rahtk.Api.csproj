@@ -26,6 +26,7 @@
     <Folder Include="Controllers\" />
     <Folder Include="Utils\" />
     <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rahtk.Shared\Rahtk.Shared.csproj">
@@ -43,5 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Remove="wwwroot\" />
+    <Content Remove="wwwroot\images\" />
   </ItemGroup>
 </Project>

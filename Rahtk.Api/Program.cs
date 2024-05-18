@@ -4,6 +4,7 @@ using Rahtk.IOC;
 using Rahtk.Shared;
 using Rahtk.Api.Utils;
 using Rahtk.Api;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ builder.Services.AddSwaggerGen(options =>
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
     options.OperationFilter<AddRequiredHeaderParameter>();
+    //options.OperationFilter<FileUploadOperationFilter>();
 });
 
 builder.Services
@@ -40,7 +42,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-
+    app.UseDeveloperExceptionPage();
 }
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -53,3 +55,36 @@ app.MapControllers();
 
 app.Run();
 
+public class FileUploadOperationFilter : IOperationFilter
+{
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    {
+        var fileUploadMime = "multipart/form-data";
+        if (operation.RequestBody == null || !operation.RequestBody.Content.Any(x => x.Key.Equals(fileUploadMime, System.StringComparison.OrdinalIgnoreCase)))
+        {
+            return;
+        }
+
+        operation.RequestBody = new OpenApiRequestBody
+        {
+            Content = {
+                [fileUploadMime] = new OpenApiMediaType
+                {
+                    Schema = new OpenApiSchema
+                    {
+                        Type = "object",
+                        Properties =
+                        {
+                            ["file"] = new OpenApiSchema
+                            {
+                                Type = "string",
+                                Format = "binary"
+                            }
+                        },
+                        Required = new HashSet<string> { "file" }
+                    }
+                }
+            }
+        };
+    }
+}

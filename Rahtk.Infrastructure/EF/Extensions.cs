@@ -15,6 +15,7 @@ namespace Rahtk.Infrastructure.EF
             AddSQL(services, configuration);
             services.AddScoped<IUserNotifier, UserNotifier>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<IFileService,FileService>();
         }
         
 
