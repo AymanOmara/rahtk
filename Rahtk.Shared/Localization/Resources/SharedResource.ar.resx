@@ -93,5 +93,7 @@
     <data name="email_verification" xml:space="preserve">
         <value>التحقق من البريد الإلكتروني.</value>
     </data>
-
+    <data name="product_created_successfully" xml:space="preserve">
+        <value>تم إنشاء المنتج بنجاح.</value>
+    </data>
 </root>

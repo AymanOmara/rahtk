@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+using Rahtk.Application.Features.category.DTO;
+using Rahtk.Application.Features.category.mappers;
 using Rahtk.Contracts.Common;
 using Rahtk.Domain.Features.Product;
 using Rahtk.Shared.Models;
 
 namespace Rahtk.Application.Features.category
 {
-    public class CategoryApplication : ICategoryApplication
+    public class CategoryService : ICategoryService
     {
         private readonly IUnitOfWork _unitofWork;
         private readonly IMapper _mapper;
-        public CategoryApplication(IUnitOfWork unitofWork, IMapper mapper)
+        public CategoryService(IUnitOfWork unitofWork, IMapper mapper)
         {
             _unitofWork = unitofWork;
             _mapper = mapper;
@@ -25,10 +26,10 @@ namespace Rahtk.Application.Features.category
             return new BaseResponse<CategoryEntity> { data = result, statusCode = 200,success = true};
         }
 
-        public async Task<BaseResponse<ICollection<CategoryEntity>>> GetAllCategories()
+        public async Task<BaseResponse<ICollection<ReadCategoryModel>>> GetAllCategories()
         {
             var result = await _unitofWork.Category.GetAllCategories();
-            return new BaseResponse<ICollection<CategoryEntity>> {data = result,statusCode = 200,success = true };
+            return new BaseResponse<ICollection<ReadCategoryModel>> {data = result.Select(e=>e.ToModel()).ToList(),statusCode = 200,success = true };
         }
     }
 }

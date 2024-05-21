@@ -15,13 +15,19 @@ namespace Rahtk.Infrastructure.EF.Services
 
         public async Task<string> SaveFileAsync(IFormFile file)
         {
-            var path = Path.Combine(_environment.WebRootPath, "images", file.FileName);
+            string uploadsFolder = Path.Combine(_environment.WebRootPath, "images");
+            string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            Directory.CreateDirectory(uploadsFolder);
 
-            using (var stream = new FileStream(path, FileMode.Create))
+            string path = $"/images/{uniqueFileName}";
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                await file.CopyToAsync(stream);
+                file.CopyTo(fileStream);
             }
+
             return path;
+
         }
     }
 }

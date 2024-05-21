@@ -13,6 +13,10 @@
     <None Remove="Features\product\" />
     <None Remove="Features\category\" />
     <None Remove="Features\category\DTO\" />
+    <None Remove="Features\product\DTO\" />
+    <None Remove="Features\product\Service\" />
+    <None Remove="Features\product\mappers\" />
+    <None Remove="Features\category\mappers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\" />
@@ -21,6 +25,10 @@
     <Folder Include="Features\product\" />
     <Folder Include="Features\category\" />
     <Folder Include="Features\category\DTO\" />
+    <Folder Include="Features\product\DTO\" />
+    <Folder Include="Features\product\Service\" />
+    <Folder Include="Features\product\mappers\" />
+    <Folder Include="Features\category\mappers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rahtk.Domain\Rahtk.Domain.csproj" />

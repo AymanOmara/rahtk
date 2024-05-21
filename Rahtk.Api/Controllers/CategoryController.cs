@@ -6,22 +6,22 @@ namespace Rahtk.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class CategoryController : ControllerBase
     {
-        private readonly ICategoryApplication _categoryApplication;
-        public ProductsController(ICategoryApplication categoryApplication)
+        private readonly ICategoryService _categoryApplication;
+        public CategoryController(ICategoryService categoryApplication)
         {
             _categoryApplication = categoryApplication;
         }
 
-        [HttpPost]
+        [HttpPost("add-category")]
         public async Task<IActionResult> CraeteCategory([FromForm]WriteOnlyCategoryModel category)
         {
             var result = await _categoryApplication.CreateCategory(category);
             return result.toResult();
         }
 
-        [HttpGet]
+        [HttpGet("get-all-categories")]
         public async Task<IActionResult> GetAllCategories()
         {
             var result = await _categoryApplication.GetAllCategories();
@@ -29,4 +29,3 @@ namespace Rahtk.Api.Controllers
         }
     }
 }
-

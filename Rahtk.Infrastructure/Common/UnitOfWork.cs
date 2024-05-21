@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Rahtk.Contracts.Common;
 using Rahtk.Contracts.Features;
+using Rahtk.Contracts.Features.products.Prodcut;
 using Rahtk.Contracts.Features.User;
 using Rahtk.Domain.Features.User;
 using Rahtk.Infrastructure.EF.Contexts;
@@ -15,6 +16,8 @@ namespace Rahtk.Infrastructure.Common
         public IUserRepository Users { get; private set; }
 
         public ICategoryRepository Category { get; private set; }
+
+        public IProductRepository Product { get; private set; }
 
         private readonly RahtkContext _context;
         public readonly UserManager<RahtkUser> _userManager;
@@ -39,6 +42,8 @@ namespace Rahtk.Infrastructure.Common
             Users = new UserRepository(context:_context,userManager:_userManager,signInManager:_signInManager,localization:_localization,configuration:_configuration, _userNotifier);
 
             Category = new CategoryRepository(_context, _localization, _fileService);
+
+            Product = new ProductRepository(_context,_fileService);
         }
     }
 }

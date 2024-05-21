@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rahtk.Infrastructure.EF.Contexts;
 
@@ -11,9 +12,11 @@ using Rahtk.Infrastructure.EF.Contexts;
 namespace Rahtk.Api.Migrations
 {
     [DbContext(typeof(RahtkContext))]
-    partial class RahtkContextModelSnapshot : ModelSnapshot
+    [Migration("20240519144823_CreateProduct")]
+    partial class CreateProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,14 +226,11 @@ namespace Rahtk.Api.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("PurchasementCount")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("ProductEntity");
                 });
 
             modelBuilder.Entity("Rahtk.Domain.Features.User.RahtkUser", b =>

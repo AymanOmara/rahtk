@@ -1,52 +1,45 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Common;
-using Rahtk.Contracts.Features;
-using Rahtk.Domain.Features.Product;
+using Rahtk.Contracts.Features.products.Prodcut;
+using Rahtk.Domain.Features.Products;
 using Rahtk.Infrastructure.EF.Contexts;
-using Rahtk.Shared.Localization;
 
 namespace Rahtk.Infrastructure.EF.Repositories
 {
-    public class CategoryRepository : ICategoryRepository
+	public class ProductRepository: IProductRepository
     {
         private readonly RahtkContext _context;
 
-        private readonly LanguageService _languageService;
-
         private readonly IFileService _fileService;
 
-
-        public CategoryRepository(RahtkContext context, LanguageService languageService, IFileService fileService)
-        {
+		public ProductRepository(RahtkContext context, IFileService fileService)
+		{
             _context = context;
-
-            _languageService = languageService;
-
             _fileService = fileService;
-
         }
 
-        public async Task<CategoryEntity> CreateCategory(IFormFile file, CategoryEntity category)
+
+
+        public async Task<ICollection<ProductEntity>> GetAllProducts()
         {
-            var path = await _fileService.SaveFileAsync(file);
+            var products = await _context.Products.ToListAsync();
 
-            category.ImagePath = path;
+            return products;
+        }
 
-            await _context.Categories.AddAsync(category);
+        public async Task<ProductEntity> CreateProduct(ProductEntity product, IFormFile file)
+        {
+            var productPath = await _fileService.SaveFileAsync(file);
+
+            product.ImagePath = productPath;
+
+            await _context.Products.AddAsync(product);
 
             await _context.SaveChangesAsync();
 
-            return category;
+            return product;
         }
-
-        public async Task<ICollection<CategoryEntity>> GetAllCategories()
-        {
-            var categories = await _context.Categories.ToListAsync();
-
-            return categories;
-        }
-
     }
 }
 

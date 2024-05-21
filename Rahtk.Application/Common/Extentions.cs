@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Rahtk.Application.Features;
 using Rahtk.Application.Features.category;
+using Rahtk.Application.Features.product;
+using Rahtk.Application.Features.product.Service;
 using Rahtk.Application.Features.User;
 
 namespace Rahtk.Application.Common
@@ -11,7 +13,9 @@ namespace Rahtk.Application.Common
         {
             services.AddScoped<IUserService, UserService>();
 
-            services.AddScoped<ICategoryApplication, CategoryApplication>();
+            services.AddScoped<ICategoryService, CategoryService>();
+
+            services.AddScoped<IProductService, ProductService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }

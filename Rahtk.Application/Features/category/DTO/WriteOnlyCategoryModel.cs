@@ -4,9 +4,9 @@ namespace Rahtk.Application.Features.category
 {
 	public class WriteOnlyCategoryModel
 	{
-        public string nameAr { get; set; }
+        public string ArabicName { get; set; }
 
-        public string nameEn { get; set; }
+        public string EnglishName { get; set; }
 
         public IFormFile file  { get; set; }
     }

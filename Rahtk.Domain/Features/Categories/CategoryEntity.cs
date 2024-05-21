@@ -1,4 +1,6 @@
-﻿namespace Rahtk.Domain.Features.Product
+﻿using Rahtk.Domain.Features.Products;
+
+namespace Rahtk.Domain.Features.Product
 {
 	public class CategoryEntity
 	{
@@ -9,5 +11,7 @@
         public string EnglishName { get; set; } = string.Empty;
 
 		public string ImagePath { get; set; } = string.Empty;
+
+		public ICollection<ProductEntity>? Products { get; set; }
 	}
 }

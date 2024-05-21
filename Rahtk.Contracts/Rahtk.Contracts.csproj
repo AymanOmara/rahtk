@@ -12,6 +12,7 @@
     <None Remove="Common\" />
     <None Remove="Features\products\" />
     <None Remove="Features\products\Category\" />
+    <None Remove="Features\products\Prodcut\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\" />
@@ -19,6 +20,7 @@
     <Folder Include="Common\" />
     <Folder Include="Features\products\" />
     <Folder Include="Features\products\Category\" />
+    <Folder Include="Features\products\Prodcut\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rahtk.Domain\Rahtk.Domain.csproj" />

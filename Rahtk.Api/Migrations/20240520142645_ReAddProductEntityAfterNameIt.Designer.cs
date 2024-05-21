@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rahtk.Infrastructure.EF.Contexts;
 
@@ -11,9 +12,11 @@ using Rahtk.Infrastructure.EF.Contexts;
 namespace Rahtk.Api.Migrations
 {
     [DbContext(typeof(RahtkContext))]
-    partial class RahtkContextModelSnapshot : ModelSnapshot
+    [Migration("20240520142645_ReAddProductEntityAfterNameIt")]
+    partial class ReAddProductEntityAfterNameIt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -223,9 +226,6 @@ namespace Rahtk.Api.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("PurchasementCount")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -368,17 +368,12 @@ namespace Rahtk.Api.Migrations
             modelBuilder.Entity("Rahtk.Domain.Features.Products.ProductEntity", b =>
                 {
                     b.HasOne("Rahtk.Domain.Features.Product.CategoryEntity", "Category")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Rahtk.Domain.Features.Product.CategoryEntity", b =>
-                {
-                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

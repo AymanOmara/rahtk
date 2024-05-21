@@ -15,7 +15,7 @@ namespace Rahtk.Api.Utils
             {
                 Name = "Accept-Language",
                 In = ParameterLocation.Header,
-                Required = true,
+                Required = false,
             });
         }
     }

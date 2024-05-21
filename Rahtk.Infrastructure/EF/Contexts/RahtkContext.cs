@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Domain.Features.Product;
+using Rahtk.Domain.Features.Products;
 using Rahtk.Domain.Features.User;
 
 namespace Rahtk.Infrastructure.EF.Contexts
@@ -28,6 +29,8 @@ namespace Rahtk.Infrastructure.EF.Contexts
         }
 
         public DbSet<CategoryEntity> Categories { set; get; }
+
+        public DbSet<ProductEntity> Products { set; get; }
     }
 }
 
