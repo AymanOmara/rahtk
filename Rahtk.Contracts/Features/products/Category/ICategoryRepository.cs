@@ -5,7 +5,7 @@ namespace Rahtk.Contracts.Features
 {
     public interface ICategoryRepository
     {
-        Task<ICollection<CategoryEntity>> GetAllCategories();
+        Task<ICollection<CategoryEntity>> GetAllCategories(string email);
 
         Task<CategoryEntity> CreateCategory(IFormFile file, CategoryEntity category);
     }

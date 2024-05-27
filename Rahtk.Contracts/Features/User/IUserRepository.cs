@@ -5,6 +5,8 @@ namespace Rahtk.Contracts.Features.User
 {
 	public interface IUserRepository
 	{
+        Task<ProfileEntity> GetProfileInfo(string email);
+
         Task<Result<string, Exception>> CreateUser(RegistrationDTO registration);
 
         Task<Result<TokenModel, Exception>> Login(LoginDTO login);

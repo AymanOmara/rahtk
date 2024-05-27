@@ -34,7 +34,12 @@ namespace Rahtk.Infrastructure.EF.Repositories
             _userNotifier = userNotifier;
 
         }
+        public async Task<ProfileEntity> GetProfileInfo(string email)
+        {
 
+            var user = await _userManager.FindByEmailAsync(email);
+            return new ProfileEntity { Email = user.Email, UserName = user.FirstName + user.LastName, PhoneNumber = user.PhoneNumber };
+        }
         public async Task<Result<string, Exception>> CreateUser(RegistrationDTO registration)
         {
             var isUserExict = await IsUserExist(registration.Email);
@@ -50,6 +55,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
                 EmailConfirmed = true,
                 FirstName = registration.FirstName,
                 LastName = registration.LastName,
+                PhoneNumber = registration.PhoneNumber,
             };
 
             var result = await _userManager.CreateAsync(user, registration.Password);
@@ -82,6 +88,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
             }
             var token = await CreateJwtToken(user);
             user.RefreshToken = token.RefreshToken;
+            user.FcmToken = d.FcmToken;
             await _userManager.UpdateAsync(user);
             return token;
         }
@@ -134,7 +141,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
                     Email = login.Email,
                     UserName = login.Email,
                     EmailConfirmed = true,
-                    
+
                 };
                 var userCreationResult = await _userManager.CreateAsync(rahtkUser);
                 if (!userCreationResult.Succeeded)
@@ -200,7 +207,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
             return _localization.Getkey("password_changed_successfully").Value;
         }
 
-        public async Task<Result<string, Exception>> ChangePassword(string newPassword,string currentPassword, string email)
+        public async Task<Result<string, Exception>> ChangePassword(string newPassword, string currentPassword, string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             try
@@ -218,7 +225,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
         {
             var user = await _context.Users.FirstOrDefaultAsync(us => us.RefreshToken == oldToken.RefreshToken);
 
-            if (user == null || user.RefreshToken == oldToken.RefreshToken)
+            if (user == null || user.RefreshToken != oldToken.RefreshToken)
             {
                 return new Exception(_localization.Getkey("user_not_found").Value);
             }

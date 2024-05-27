@@ -23,6 +23,13 @@ namespace Rahtk.Application.Features.product.DTO
         public  IFormFile file { get; set; }
 
         public int PurchasementCount { get; set; }
+
+        public required string Condition { get; set; } = string.Empty;
+
+        public required string PriceType { get; set; } = string.Empty;
+
+        public required string Location { get; set; } = string.Empty;
+
+        public required string DeliveryDetails { get; set; } = string.Empty;
     }
 }
-

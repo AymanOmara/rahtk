@@ -20,6 +20,8 @@ namespace Rahtk.Application.Features
         Task<BaseResponse<bool>> ForgetPassword(ForgetPasswordModel forgetPassword);
 
         Task<BaseResponse<bool>> ChangePassword(string newPassword,string currentPassword,string email);
+
+        Task<BaseResponse<ProfileEntity>> GetProfileInfo(string email);
     }
 }
 

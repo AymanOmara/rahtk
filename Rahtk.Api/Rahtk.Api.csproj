@@ -45,5 +45,9 @@
   <ItemGroup>
     <Content Remove="wwwroot\" />
     <Content Remove="wwwroot\images\" />
+    <Content Remove="rahtk-ecommerce-app-firebase-adminsdk-73fmy-8084308673.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="rahtk-ecommerce-app-firebase-adminsdk-73fmy-8084308673.json" />
   </ItemGroup>
 </Project>

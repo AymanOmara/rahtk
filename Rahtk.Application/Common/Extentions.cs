@@ -1,6 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Rahtk.Application.Features;
+using Rahtk.Application.Features.Address.Service;
 using Rahtk.Application.Features.category;
+using Rahtk.Application.Features.Drug;
+using Rahtk.Application.Features.Drug.Service;
+using Rahtk.Application.Features.Order;
+using Rahtk.Application.Features.Payment.Service;
 using Rahtk.Application.Features.product;
 using Rahtk.Application.Features.product.Service;
 using Rahtk.Application.Features.User;
@@ -17,8 +22,15 @@ namespace Rahtk.Application.Common
 
             services.AddScoped<IProductService, ProductService>();
 
+            services.AddScoped<IAddressService, AddressService>();
+
+            services.AddScoped<IPaymentService, PaymentService>();
+
+            services.AddScoped<IOrderService, OrderService>();
+
+            services.AddScoped<IDrugService, DrugService>();
+            
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
     }
 }
-

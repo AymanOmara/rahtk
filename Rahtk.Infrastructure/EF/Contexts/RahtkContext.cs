@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Rahtk.Domain.Features.Order;
+using Rahtk.Domain.Features.Pharmacy;
 using Rahtk.Domain.Features.Product;
 using Rahtk.Domain.Features.Products;
 using Rahtk.Domain.Features.User;
@@ -12,8 +14,6 @@ namespace Rahtk.Infrastructure.EF.Contexts
         {
 
         }
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
@@ -31,6 +31,18 @@ namespace Rahtk.Infrastructure.EF.Contexts
         public DbSet<CategoryEntity> Categories { set; get; }
 
         public DbSet<ProductEntity> Products { set; get; }
+
+        public DbSet<FavoriteProductUser> FavoriteProductUser { get; set; }
+
+        public DbSet<AddressEntity> Addresses { get; set; }
+
+        public DbSet<PaymentOptionEntity> PaymentOptions { get; set; }
+
+        public DbSet<OrderEntity> Orders { get; set; }
+
+        public DbSet<DrugEntity> Drugs { get; set; }
+
+        public DbSet<ReminderEntity> Reminders { get; set; }
+
     }
 }
-

@@ -26,9 +26,9 @@ namespace Rahtk.Application.Features.category
             return new BaseResponse<CategoryEntity> { data = result, statusCode = 200,success = true};
         }
 
-        public async Task<BaseResponse<ICollection<ReadCategoryModel>>> GetAllCategories()
+        public async Task<BaseResponse<ICollection<ReadCategoryModel>>> GetAllCategories(string email)
         {
-            var result = await _unitofWork.Category.GetAllCategories();
+            var result = await _unitofWork.Category.GetAllCategories(email);
             return new BaseResponse<ICollection<ReadCategoryModel>> {data = result.Select(e=>e.ToModel()).ToList(),statusCode = 200,success = true };
         }
     }

@@ -23,6 +23,14 @@ namespace Rahtk.Domain.Features.Products
 
 		public decimal DiscountPercentage { get; set; }
 
+		public string Condition { get; set; } = string.Empty;
+
+        public string PriceType { get; set; } = string.Empty;
+
+        public string Location { get; set; } = string.Empty;
+
+		public string DeliveryDetails { get; set; } = string.Empty;
+
 		public DateTime CraetedDate { get; set; } = DateTime.Now;
 
 		[ForeignKey("CategoryId")]
@@ -33,5 +41,10 @@ namespace Rahtk.Domain.Features.Products
 		public int InventoryAmount { get; set; }
 
         public int PurchasementCount { get; set; }
+
+		[NotMapped]
+        public bool IsFavorite { get; set; }
+
+        public ICollection<FavoriteProductUser>? FavoriteProductUsers { get; set; }
     }
 }

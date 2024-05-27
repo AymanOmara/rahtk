@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Common;
 using Rahtk.Contracts.Features;
 using Rahtk.Domain.Features.Product;
+using Rahtk.Domain.Features.User;
 using Rahtk.Infrastructure.EF.Contexts;
 using Rahtk.Shared.Localization;
 
@@ -16,14 +18,21 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
         private readonly IFileService _fileService;
 
+        private readonly UserManager<RahtkUser> _userManager;
 
-        public CategoryRepository(RahtkContext context, LanguageService languageService, IFileService fileService)
+        private readonly INotificationSender _sender;
+
+        public CategoryRepository(RahtkContext context, LanguageService languageService, IFileService fileService, UserManager<RahtkUser> userManager, INotificationSender sender)
         {
             _context = context;
 
             _languageService = languageService;
 
             _fileService = fileService;
+
+            _userManager = userManager;
+
+            _sender = sender;
 
         }
 
@@ -40,10 +49,21 @@ namespace Rahtk.Infrastructure.EF.Repositories
             return category;
         }
 
-        public async Task<ICollection<CategoryEntity>> GetAllCategories()
+        public async Task<ICollection<CategoryEntity>> GetAllCategories(string email)
         {
-            var categories = await _context.Categories.Include(cat=> cat.Products).ToListAsync();
-
+            var categories = await _context.Categories.Include(cat => cat.Products).ToListAsync();
+            var user = await _userManager.FindByEmailAsync(email);
+            var favoriteProductIds = await _context.FavoriteProductUser
+                .Where(fpu => fpu.UserId == user.Id)
+                .Select(fpu => fpu.ProductId)
+                .ToListAsync();
+            foreach (var category in categories)
+            {
+                foreach (var product in category.Products)
+                {
+                    product.IsFavorite = favoriteProductIds.Contains(product.Id);
+                }
+            }
             return categories;
         }
 

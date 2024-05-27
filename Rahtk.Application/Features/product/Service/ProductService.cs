@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Rahtk.Application.Features.product.DTO;
+using Rahtk.Application.Features.product.mappers;
 using Rahtk.Contracts.Common;
 using Rahtk.Domain.Features.Products;
 using Rahtk.Shared.Localization;
@@ -21,6 +22,12 @@ namespace Rahtk.Application.Features.product.Service
             _languageService = languageService;
 		}
 
+        public async Task<BaseResponse<ReadProductModel>> AddToFavorite(string email,int productId)
+        {
+            var result = await _unitOfWork.Product.AddToFavorite(email,productId);
+            return new BaseResponse<ReadProductModel> { data = result.ToModel(), statusCode = 200, message = "", success = true };
+        }
+
         public async Task<BaseResponse<ProductEntity>> CreateProduct(CreateProductModel model)
         {
             var entity = _mapper.Map<ProductEntity>(model);
@@ -34,6 +41,24 @@ namespace Rahtk.Application.Features.product.Service
         {
             var result = await _unitOfWork.Product.GetAllProducts();
             return new BaseResponse<ICollection<ProductEntity>> { data = result, statusCode = 200, success = true };
+        }
+
+        public async Task<BaseResponse<ICollection<ProductEntity>>> GetFavorites(string email)
+        {
+            var result = await _unitOfWork.Product.GetFavorites(email);
+            return new BaseResponse<ICollection<ProductEntity>> { data = result, statusCode = 200, success = true };
+        }
+
+        public async Task<BaseResponse<ReadProductModel>> ProductDetails(string userEmail, int productId)
+        {
+            var result = await _unitOfWork.Product.GetProductDetails(userEmail,productId);
+            return new BaseResponse<ReadProductModel> { data = result.ToModel(), statusCode = 200, message = "", success = true };
+        }
+
+        public async Task<BaseResponse<ReadProductModel>> RemoveFavorite(string email,int productId)
+        {
+            var result = await _unitOfWork.Product.RemoveFavorite(email, productId);
+            return new BaseResponse<ReadProductModel> { data = result.ToModel(), statusCode = 200, message = "", success = true };
         }
     }
 }

@@ -96,5 +96,13 @@
     <data name="product_created_successfully" xml:space="preserve">
         <value>Product created successfully.</value>
     </data>
-
+    <data name="address_created_successfully" xml:space="preserve">
+        <value>Address created successfully</value>
+    </data>
+    <data name="payment_option_added_successfully" xml:space="preserve">
+        <value>Payment option added successfully</value>
+    </data>
+    <data name="reminder_added_successfully" xml:space="preserve">
+        <value>Reminder added successfully</value>
+    </data>
 </root>

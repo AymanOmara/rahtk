@@ -155,6 +155,121 @@ namespace Rahtk.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("PaymentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("PaymentOptionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("PaymentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderItemEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("OrderEntityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductCounter")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderEntityId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderItemEntity");
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.Pharmacy.DrugEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Drugs");
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.Pharmacy.ReminderEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DrugId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReminderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ReminderIntervalDays")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DrugId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reminders");
+                });
+
             modelBuilder.Entity("Rahtk.Domain.Features.Product.CategoryEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -180,6 +295,30 @@ namespace Rahtk.Api.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Rahtk.Domain.Features.Products.FavoriteProductUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FavoriteProductUser");
+                });
+
             modelBuilder.Entity("Rahtk.Domain.Features.Products.ProductEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -199,8 +338,16 @@ namespace Rahtk.Api.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Condition")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CraetedDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("DeliveryDetails")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("DiscountPercentage")
                         .HasColumnType("decimal(18,2)");
@@ -220,8 +367,16 @@ namespace Rahtk.Api.Migrations
                     b.Property<int>("InventoryAmount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("PriceType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PurchasementCount")
                         .HasColumnType("int");
@@ -231,6 +386,84 @@ namespace Rahtk.Api.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.User.AddressEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RahtkUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RahtkUserId");
+
+                    b.ToTable("Addresses");
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.User.PaymentOptionEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CVV")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CardHolder")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CardNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExpirationDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RahtkUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RahtkUserId");
+
+                    b.ToTable("PaymentOptions");
                 });
 
             modelBuilder.Entity("Rahtk.Domain.Features.User.RahtkUser", b =>
@@ -251,6 +484,10 @@ namespace Rahtk.Api.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FcmToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -365,6 +602,78 @@ namespace Rahtk.Api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderEntity", b =>
+                {
+                    b.HasOne("Rahtk.Domain.Features.User.AddressEntity", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId");
+
+                    b.HasOne("Rahtk.Domain.Features.User.PaymentOptionEntity", "Payment")
+                        .WithMany()
+                        .HasForeignKey("PaymentId");
+
+                    b.HasOne("Rahtk.Domain.Features.User.RahtkUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
+
+                    b.Navigation("Payment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderItemEntity", b =>
+                {
+                    b.HasOne("Rahtk.Domain.Features.Order.OrderEntity", null)
+                        .WithMany("Items")
+                        .HasForeignKey("OrderEntityId");
+
+                    b.HasOne("Rahtk.Domain.Features.Products.ProductEntity", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.Pharmacy.ReminderEntity", b =>
+                {
+                    b.HasOne("Rahtk.Domain.Features.Pharmacy.DrugEntity", "Drug")
+                        .WithMany()
+                        .HasForeignKey("DrugId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rahtk.Domain.Features.User.RahtkUser", "User")
+                        .WithMany("PeriodicallyDrugs")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Drug");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.Products.FavoriteProductUser", b =>
+                {
+                    b.HasOne("Rahtk.Domain.Features.Products.ProductEntity", "Product")
+                        .WithMany("FavoriteProductUsers")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rahtk.Domain.Features.User.RahtkUser", "User")
+                        .WithMany("FavoriteProductUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Rahtk.Domain.Features.Products.ProductEntity", b =>
                 {
                     b.HasOne("Rahtk.Domain.Features.Product.CategoryEntity", "Category")
@@ -376,9 +685,48 @@ namespace Rahtk.Api.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Rahtk.Domain.Features.User.AddressEntity", b =>
+                {
+                    b.HasOne("Rahtk.Domain.Features.User.RahtkUser", null)
+                        .WithMany("Addresses")
+                        .HasForeignKey("RahtkUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.User.PaymentOptionEntity", b =>
+                {
+                    b.HasOne("Rahtk.Domain.Features.User.RahtkUser", null)
+                        .WithMany("PaymentOptions")
+                        .HasForeignKey("RahtkUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderEntity", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("Rahtk.Domain.Features.Product.CategoryEntity", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.Products.ProductEntity", b =>
+                {
+                    b.Navigation("FavoriteProductUsers");
+                });
+
+            modelBuilder.Entity("Rahtk.Domain.Features.User.RahtkUser", b =>
+                {
+                    b.Navigation("Addresses");
+
+                    b.Navigation("FavoriteProductUsers");
+
+                    b.Navigation("PaymentOptions");
+
+                    b.Navigation("PeriodicallyDrugs");
                 });
 #pragma warning restore 612, 618
         }

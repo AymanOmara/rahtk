@@ -13,6 +13,10 @@
     <None Remove="Features\products\" />
     <None Remove="Features\products\Category\" />
     <None Remove="Features\products\Prodcut\" />
+    <None Remove="Features\Address\" />
+    <None Remove="Features\Payment\" />
+    <None Remove="Features\Order\" />
+    <None Remove="Features\Drug\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\" />
@@ -21,6 +25,10 @@
     <Folder Include="Features\products\" />
     <Folder Include="Features\products\Category\" />
     <Folder Include="Features\products\Prodcut\" />
+    <Folder Include="Features\Address\" />
+    <Folder Include="Features\Payment\" />
+    <Folder Include="Features\Order\" />
+    <Folder Include="Features\Drug\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rahtk.Domain\Rahtk.Domain.csproj" />

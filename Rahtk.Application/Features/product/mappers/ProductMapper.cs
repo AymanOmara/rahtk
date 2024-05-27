@@ -21,6 +21,13 @@ namespace Rahtk.Application.Features.product.mappers
                 PurchasementCount = product.PurchasementCount,
                 Price = product.Price,
                 ImagePath = product.ImagePath,
+                IsFavorite = product.IsFavorite,
+                CategoryNameAr = product.Category.ArabicName,
+                CategoryNameEn = product.Category.EnglishName,
+                Condition = product.Condition,
+                Location = product.Location,
+                PriceType = product.PriceType,
+                DeliveryDetails = product.DeliveryDetails,
             };
         }
     }

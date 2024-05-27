@@ -109,6 +109,12 @@ namespace Rahtk.Application.Features.User
 
         }
 
+        public async Task<BaseResponse<ProfileEntity>> GetProfileInfo(string email)
+        {
+            var result = await _unitOfWork.Users.GetProfileInfo(email);
+            return new BaseResponse<ProfileEntity> { data = result, statusCode = 200, success = true };
+        }
+
         public async Task<BaseResponse<TokenModel>> Login(LoginDTO login)
         {
             var result = await _unitOfWork.Users.Login(login);

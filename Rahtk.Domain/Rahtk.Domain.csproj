@@ -12,6 +12,8 @@
     <None Remove="Common\" />
     <None Remove="Features\Categories\" />
     <None Remove="Features\Products\" />
+    <None Remove="Features\Order\" />
+    <None Remove="Features\Pharmacy\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\" />
@@ -19,6 +21,8 @@
     <Folder Include="Common\" />
     <Folder Include="Features\Categories\" />
     <Folder Include="Features\Products\" />
+    <Folder Include="Features\Order\" />
+    <Folder Include="Features\Pharmacy\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

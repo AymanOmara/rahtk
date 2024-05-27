@@ -96,4 +96,13 @@
     <data name="product_created_successfully" xml:space="preserve">
         <value>تم إنشاء المنتج بنجاح.</value>
     </data>
+    <data name="address_created_successfully" xml:space="preserve">
+        <value>تم إنشاء العنوان بنجاح</value>
+    </data>
+    <data name="payment_option_added_successfully" xml:space="preserve">
+        <value>تمت إضافة خيار الدفع بنجاح</value>
+    </data>
+    <data name="reminder_added_successfully" xml:space="preserve">
+        <value>تمت إضافة التذكير بنجاح</value>
+    </data>
 </root>

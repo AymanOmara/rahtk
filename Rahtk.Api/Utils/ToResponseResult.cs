@@ -6,7 +6,7 @@ namespace Rahtk.Api.Utils
     public static class ResponseResult
     {
 
-        public static IActionResult toResult<T>(this BaseResponse<T> response)
+        public static IActionResult ToResult<T>(this BaseResponse<T> response)
         {
             return new ObjectResult(response)
             {

@@ -17,6 +17,16 @@
     <None Remove="Features\product\Service\" />
     <None Remove="Features\product\mappers\" />
     <None Remove="Features\category\mappers\" />
+    <None Remove="Features\Address\" />
+    <None Remove="Features\Address\DTO\" />
+    <None Remove="Features\Address\Service\" />
+    <None Remove="Features\Payment\" />
+    <None Remove="Features\Payment\DTO\" />
+    <None Remove="Features\Payment\Service\" />
+    <None Remove="Features\Order\" />
+    <None Remove="Features\Drug\" />
+    <None Remove="Features\Drug\Service\" />
+    <None Remove="Features\Drug\DTO\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\" />
@@ -29,6 +39,16 @@
     <Folder Include="Features\product\Service\" />
     <Folder Include="Features\product\mappers\" />
     <Folder Include="Features\category\mappers\" />
+    <Folder Include="Features\Address\" />
+    <Folder Include="Features\Address\DTO\" />
+    <Folder Include="Features\Address\Service\" />
+    <Folder Include="Features\Payment\" />
+    <Folder Include="Features\Payment\DTO\" />
+    <Folder Include="Features\Payment\Service\" />
+    <Folder Include="Features\Order\" />
+    <Folder Include="Features\Drug\" />
+    <Folder Include="Features\Drug\Service\" />
+    <Folder Include="Features\Drug\DTO\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rahtk.Domain\Rahtk.Domain.csproj" />
