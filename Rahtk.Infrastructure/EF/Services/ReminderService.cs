@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Common;
 using Rahtk.Domain.Features.Pharmacy;
+using Rahtk.Domain.Features.User;
 using Rahtk.Infrastructure.EF.Contexts;
 
 namespace Rahtk.Infrastructure.EF.Services
@@ -9,30 +10,29 @@ namespace Rahtk.Infrastructure.EF.Services
 	public class ReminderService : IReminderService
     {
         private readonly RahtkContext _context;
-        private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly IRecurringJobManager _recurringJobManager;
         private readonly INotificationSender _notificatioSender;
 
-        public ReminderService(RahtkContext context, IBackgroundJobClient backgroundJobClient, IRecurringJobManager recurringJobManager, INotificationSender notificatioSender)
+        public ReminderService(RahtkContext context, IRecurringJobManager recurringJobManager, INotificationSender notificatioSender)
         {
             _context = context;
-            _backgroundJobClient = backgroundJobClient;
             _recurringJobManager = recurringJobManager;
             _notificatioSender = notificatioSender;
         }
         public async Task ScheduleReminder(ReminderEntity reminder)
         {
-            // Calculate the next reminder date
-            var nextReminderDate = reminder.ReminderDate.AddSeconds(reminder.ReminderIntervalDays);
+           
+            var nextReminderDate = reminder.ReminderDate.AddHours(reminder.ReminderIntervalDays);
             reminder.ReminderDate = nextReminderDate;
             _context.Reminders.Update(reminder);
             await _context.SaveChangesAsync();
 
-            // Schedule the job with Hangfire
+            
             _recurringJobManager.AddOrUpdate(
                 reminder.Id.ToString(),
                 () => SendReminder(reminder.Id),
-                Cron.Minutely); // Schedule to run daily and check if the reminder date is today
+                Cron.Hourly
+                );
         }
         public async Task SendReminder(int reminderId)
         {
@@ -41,7 +41,15 @@ namespace Rahtk.Infrastructure.EF.Services
 
             if (DateTime.UtcNow.Date == reminder.ReminderDate.Date)
             {
-                await _notificatioSender.SendNotification(reminder.User.FcmToken,$"Take your drug named {reminder.Drug.Name}");
+                await _notificatioSender.SendNotification(reminder.User.FcmToken, $"Take your drug named {reminder.Drug.Name}");
+                await _context.Notifications.AddAsync(new NotificationEntity { UserId = reminder.UserId, Title = "Rahtk Medicine Center", Body = $"Take your drug named {reminder.Drug.Name}" });
+                await _context.SaveChangesAsync();
+            }
+            else if (DateTime.UtcNow.Date.AddHours(1) == reminder.ReminderDate.Date)
+            {
+                await _notificatioSender.SendNotification(reminder.User.FcmToken, $"Reminder: Your drug named {reminder.Drug.Name} needs to be taken tomorrow.");
+                await _context.Notifications.AddAsync(new NotificationEntity { UserId = reminder.UserId, Title = "Rahtk Medicine Center", Body = $"Reminder: Your drug named {reminder.Drug.Name} needs to be taken tomorrow." });
+                await _context.SaveChangesAsync();
             }
         }
     }

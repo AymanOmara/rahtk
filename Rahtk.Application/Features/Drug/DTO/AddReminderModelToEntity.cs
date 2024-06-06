@@ -1,5 +1,4 @@
-﻿using System;
-using Rahtk.Domain.Features.Pharmacy;
+﻿using Rahtk.Domain.Features.Pharmacy;
 
 namespace Rahtk.Application.Features.Drug.DTO
 {
@@ -16,4 +15,3 @@ namespace Rahtk.Application.Features.Drug.DTO
         }
     }
 }
-

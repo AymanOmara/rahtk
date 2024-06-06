@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rahtk.Infrastructure.EF.Contexts;
 
@@ -11,9 +12,11 @@ using Rahtk.Infrastructure.EF.Contexts;
 namespace Rahtk.Api.Migrations
 {
     [DbContext(typeof(RahtkContext))]
-    partial class RahtkContextModelSnapshot : ModelSnapshot
+    [Migration("20240606092151_AddPriceToDrug")]
+    partial class AddPriceToDrug
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,32 +156,6 @@ namespace Rahtk.Api.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderDrugItemEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DrugCounter")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DrugId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrderEntityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DrugId");
-
-                    b.HasIndex("OrderEntityId");
-
-                    b.ToTable("OrderDrugItemEntity");
                 });
 
             modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderEntity", b =>
@@ -664,19 +641,6 @@ namespace Rahtk.Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderDrugItemEntity", b =>
-                {
-                    b.HasOne("Rahtk.Domain.Features.Pharmacy.DrugEntity", "Drug")
-                        .WithMany()
-                        .HasForeignKey("DrugId");
-
-                    b.HasOne("Rahtk.Domain.Features.Order.OrderEntity", null)
-                        .WithMany("Drugs")
-                        .HasForeignKey("OrderEntityId");
-
-                    b.Navigation("Drug");
-                });
-
             modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderEntity", b =>
                 {
                     b.HasOne("Rahtk.Domain.Features.User.AddressEntity", "Address")
@@ -791,8 +755,6 @@ namespace Rahtk.Api.Migrations
 
             modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderEntity", b =>
                 {
-                    b.Navigation("Drugs");
-
                     b.Navigation("Items");
                 });
 

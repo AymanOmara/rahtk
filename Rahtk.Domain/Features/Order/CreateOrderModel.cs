@@ -10,6 +10,8 @@
 
         public ICollection<OrderItemModel>? OrderItemModel { get; set; }
 
+        public ICollection<OrderItemModel>? DrugItemModel { get; set; }
+
     }
     public class OrderItemModel
     {

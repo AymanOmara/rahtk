@@ -22,8 +22,8 @@ namespace Rahtk.Application.Features.product.mappers
                 Price = product.Price,
                 ImagePath = product.ImagePath,
                 IsFavorite = product.IsFavorite,
-                CategoryNameAr = product.Category.ArabicName,
-                CategoryNameEn = product.Category.EnglishName,
+                CategoryNameAr = product?.Category?.ArabicName,
+                CategoryNameEn = product?.Category?.EnglishName,
                 Condition = product.Condition,
                 Location = product.Location,
                 PriceType = product.PriceType,
@@ -32,4 +32,3 @@ namespace Rahtk.Application.Features.product.mappers
         }
     }
 }
-

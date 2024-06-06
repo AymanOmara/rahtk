@@ -1,4 +1,5 @@
-﻿using Rahtk.Contracts.Common;
+﻿using Rahtk.Application.Features.User.DTO;
+using Rahtk.Contracts.Common;
 using Rahtk.Domain.Features.User;
 using Rahtk.Shared.Localization;
 using Rahtk.Shared.Models;
@@ -109,6 +110,12 @@ namespace Rahtk.Application.Features.User
 
         }
 
+        public async Task<BaseResponse<ICollection<NotificationModel>>> GetNotifications(string email)
+        {
+            var result = await _unitOfWork.Users.GetNotifications(email);
+            return new BaseResponse<ICollection<NotificationModel>> { statusCode = 200, success = true, data = result.Select(e => e.ToModel()).ToList() };
+        }
+
         public async Task<BaseResponse<ProfileEntity>> GetProfileInfo(string email)
         {
             var result = await _unitOfWork.Users.GetProfileInfo(email);
@@ -137,6 +144,18 @@ namespace Rahtk.Application.Features.User
                     data = result.Value,
                 };
             }
+        }
+
+        public async Task<BaseResponse<bool>> Logout(string email)
+        {
+            await _unitOfWork.Users.Logout(email);
+            return new BaseResponse<bool>
+            {
+                data = true,
+                statusCode = 200,
+                success = true,
+                message = _languageService.Getkey("logut_successfully").Value
+            };
         }
 
         public async Task<BaseResponse<TokenModel>> RefreshToken(TokenModel token)

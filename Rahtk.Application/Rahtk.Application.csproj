@@ -27,6 +27,7 @@
     <None Remove="Features\Drug\" />
     <None Remove="Features\Drug\Service\" />
     <None Remove="Features\Drug\DTO\" />
+    <None Remove="Features\User\DTO\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\" />
@@ -49,6 +50,7 @@
     <Folder Include="Features\Drug\" />
     <Folder Include="Features\Drug\Service\" />
     <Folder Include="Features\Drug\DTO\" />
+    <Folder Include="Features\User\DTO\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rahtk.Domain\Rahtk.Domain.csproj" />

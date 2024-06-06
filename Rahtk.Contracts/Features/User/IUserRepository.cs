@@ -22,6 +22,10 @@ namespace Rahtk.Contracts.Features.User
         Task<Result<string, Exception>> ForgetPassword(ForgetPasswordModel forgetPassword);
 
         Task<Result<string, Exception>> ChangePassword(string newPassword, string currentPassword, string userId);
+
+        Task<ICollection<NotificationEntity>> GetNotifications(string email);
+
+        Task Logout(string email);
     }
 }
 

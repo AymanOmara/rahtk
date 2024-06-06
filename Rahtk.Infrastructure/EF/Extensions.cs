@@ -27,13 +27,16 @@ namespace Rahtk.Infrastructure.EF
             services.AddSingleton<INotificationSender, NotificationSender>();
             FirebaseApp.Create(new AppOptions()
             {
+                //AppDomain.CurrentDomain.BaseDirectory
                 Credential = GoogleCredential.FromFile(Path.Combine("", "rahtk-ecommerce-app-firebase-adminsdk-73fmy-8084308673.json")),
             });
+
+
             services.AddHangfire(_ => _
             .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
             .UseSimpleAssemblyNameTypeSerializer()
             .UseDefaultTypeSerializer()
-                  .UseSqlServerStorage(configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+                  .UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"), new SqlServerStorageOptions
                   {
                       CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
                       SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
@@ -44,15 +47,15 @@ namespace Rahtk.Infrastructure.EF
                   })
            );
 
-            // Add the processing server as IHostedService
             services.AddHangfireServer();
+            services.AddHostedService<StartupBackgroundService>();
         }
 
         private static void AddSQL(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<RahtkContext>(ctx => ctx.UseSqlServer(configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Rahtk.Api")));
         }
-
     }
+
 }
 

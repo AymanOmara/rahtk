@@ -234,5 +234,19 @@ namespace Rahtk.Infrastructure.EF.Repositories
             await _userManager.UpdateAsync(user);
             return token;
         }
+
+        public async Task<ICollection<NotificationEntity>> GetNotifications(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            var result = await _context.Notifications.Where(n => n.UserId == user.Id).ToListAsync();
+
+            return result;
+        }
+
+        public async Task Logout(string email)
+        {
+            await _signInManager.SignOutAsync();
+        }
     }
 }

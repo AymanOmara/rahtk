@@ -23,5 +23,7 @@ namespace Rahtk.Domain.Features.User
         public ICollection<PaymentOptionEntity>? PaymentOptions { get; set; }
 
         public ICollection<ReminderEntity>? PeriodicallyDrugs { get; set; }
+
+        public ICollection<NotificationEntity>? Notifications { get; set; }
     }
 }

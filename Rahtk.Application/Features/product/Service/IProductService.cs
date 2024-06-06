@@ -9,7 +9,7 @@ namespace Rahtk.Application.Features.product
     {
         Task<BaseResponse<ProductEntity>> CreateProduct(CreateProductModel model);
 
-        Task<BaseResponse<ICollection<ProductEntity>>> GetAllProducts();
+        Task<BaseResponse<ICollection<ReadProductModel>>> GetAllProducts();
 
         Task<BaseResponse<ReadProductModel>> AddToFavorite(string userEmail, int productId);
 

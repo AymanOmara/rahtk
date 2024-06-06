@@ -53,30 +53,54 @@ namespace Rahtk.Api.Controllers
         }
 
         [HttpGet("verify-otp")]
-        public async Task<IActionResult> VerifyOTP(string email, string otp) {
-            var result = await _userService.VerifyOTP(email:email,otp:otp);
+        public async Task<IActionResult> VerifyOTP(string email, string otp)
+        {
+            var result = await _userService.VerifyOTP(email: email, otp: otp);
             return result.ToResult();
         }
 
         [HttpPost("forget-password")]
-        public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordModel forgetPassword) {
+        public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswordModel forgetPassword)
+        {
             var result = await _userService.ForgetPassword(forgetPassword);
             return result.ToResult();
         }
 
         [Authorize]
         [HttpPost("change-password")]
-        public async Task<IActionResult> ChangePassword(string newPassword,string currentPassword)
+        public async Task<IActionResult> ChangePassword(string newPassword, string currentPassword)
         {
             var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _userService.ChangePassword(newPassword,currentPassword, email ?? "");
+            var result = await _userService.ChangePassword(newPassword, currentPassword, email ?? "");
             return result.ToResult();
         }
+
         [Authorize]
         [HttpGet("get-profile")]
-        public async Task<IActionResult> GetProfileInfo() {
+        public async Task<IActionResult> GetProfileInfo()
+        {
             var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _userService.GetProfileInfo(email);
+            return result.ToResult();
+        }
+
+        [Authorize]
+        [HttpGet("get-notifications")]
+        public async Task<IActionResult> GetNotifications()
+        {
+            var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _userService.GetNotifications(email);
+            return result.ToResult();
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var result = await _userService.Logout(email);
+
             return result.ToResult();
         }
     }

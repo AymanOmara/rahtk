@@ -15,7 +15,7 @@ namespace Rahtk.Infrastructure.EF.Services
             {
                 Notification = new Notification
                 {
-                    Title = "Message Title",
+                    Title = "Rahtk Medicine Center",
                     Body = messageBody,
                 },
                 Token = deviceToken,

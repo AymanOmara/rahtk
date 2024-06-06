@@ -1,4 +1,5 @@
-﻿using Rahtk.Domain.Features.User;
+﻿using Rahtk.Application.Features.User;
+using Rahtk.Domain.Features.User;
 using Rahtk.Shared.Models;
 
 namespace Rahtk.Application.Features
@@ -22,6 +23,10 @@ namespace Rahtk.Application.Features
         Task<BaseResponse<bool>> ChangePassword(string newPassword,string currentPassword,string email);
 
         Task<BaseResponse<ProfileEntity>> GetProfileInfo(string email);
+
+        Task<BaseResponse<ICollection<NotificationModel>>> GetNotifications(string email);
+
+        Task<BaseResponse<bool>> Logout(string email);
     }
 }
 

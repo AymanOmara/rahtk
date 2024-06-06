@@ -19,7 +19,7 @@ namespace Rahtk.Application.Features.Drug.Service
 
         public async Task<BaseResponse<DrugEntity>> AddDrug(AddDrugModel drugModel)
         {
-            var result = await _unitOfWork.Drug.AddDrug(new DrugEntity { Name = drugModel.Name}, drugModel.Image);
+            var result = await _unitOfWork.Drug.AddDrug(new DrugEntity { Name = drugModel.Name, Price = drugModel.Price,DiscountPercentage = drugModel.DiscountPercentage}, drugModel.Image);
             return new BaseResponse<DrugEntity> { data = result, statusCode = 200, success = true };
         }
 

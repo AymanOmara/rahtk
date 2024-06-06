@@ -34,9 +34,9 @@
 
         public required string Location { get; set; } = string.Empty;
 
-        public required string CategoryNameAr { get; set; } = string.Empty;
+        public required string? CategoryNameAr { get; set; } = string.Empty;
 
-        public required string CategoryNameEn { get; set; } = string.Empty;
+        public required string? CategoryNameEn { get; set; } = string.Empty;
 
         public required string DeliveryDetails { get; set; } = string.Empty;
     }

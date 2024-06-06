@@ -42,9 +42,8 @@ namespace Rahtk.Infrastructure.Common
         private readonly IFileService _fileService;
         private readonly INotificationSender _sender;
         private readonly IReminderService _reminderService;
-        private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly IRecurringJobManager _recurringJobManager;
-        public UnitOfWork(LanguageService localization, RahtkContext context, UserManager<RahtkUser> userManager, SignInManager<RahtkUser> signInManager, IConfiguration configuration, IUserNotifier userNotifier, IFileService fileService, INotificationSender sender, IBackgroundJobClient backgroundJobClient, IRecurringJobManager recurringJobManager)
+        public UnitOfWork(LanguageService localization, RahtkContext context, UserManager<RahtkUser> userManager, SignInManager<RahtkUser> signInManager, IConfiguration configuration, IUserNotifier userNotifier, IFileService fileService, INotificationSender sender, IRecurringJobManager recurringJobManager)
         {
             _localization = localization;
             _context = context;
@@ -54,9 +53,9 @@ namespace Rahtk.Infrastructure.Common
             _userNotifier = userNotifier;
             _fileService = fileService;
             _sender = sender;
-            _backgroundJobClient = backgroundJobClient;
+            
             _recurringJobManager = recurringJobManager;
-            _reminderService = new ReminderService(_context,_backgroundJobClient, _recurringJobManager, _sender);
+            _reminderService = new ReminderService(_context, _recurringJobManager, _sender);
             InitializeRepositories();
         }
         private void InitializeRepositories()

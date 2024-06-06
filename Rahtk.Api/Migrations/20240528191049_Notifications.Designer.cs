@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rahtk.Infrastructure.EF.Contexts;
 
@@ -11,9 +12,11 @@ using Rahtk.Infrastructure.EF.Contexts;
 namespace Rahtk.Api.Migrations
 {
     [DbContext(typeof(RahtkContext))]
-    partial class RahtkContextModelSnapshot : ModelSnapshot
+    [Migration("20240528191049_Notifications")]
+    partial class Notifications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,32 +158,6 @@ namespace Rahtk.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderDrugItemEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DrugCounter")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DrugId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrderEntityId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DrugId");
-
-                    b.HasIndex("OrderEntityId");
-
-                    b.ToTable("OrderDrugItemEntity");
-                });
-
             modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -254,9 +231,6 @@ namespace Rahtk.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("DiscountPercentage")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("ImagePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -264,9 +238,6 @@ namespace Rahtk.Api.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -471,10 +442,6 @@ namespace Rahtk.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -664,19 +631,6 @@ namespace Rahtk.Api.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderDrugItemEntity", b =>
-                {
-                    b.HasOne("Rahtk.Domain.Features.Pharmacy.DrugEntity", "Drug")
-                        .WithMany()
-                        .HasForeignKey("DrugId");
-
-                    b.HasOne("Rahtk.Domain.Features.Order.OrderEntity", null)
-                        .WithMany("Drugs")
-                        .HasForeignKey("OrderEntityId");
-
-                    b.Navigation("Drug");
-                });
-
             modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderEntity", b =>
                 {
                     b.HasOne("Rahtk.Domain.Features.User.AddressEntity", "Address")
@@ -791,8 +745,6 @@ namespace Rahtk.Api.Migrations
 
             modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderEntity", b =>
                 {
-                    b.Navigation("Drugs");
-
                     b.Navigation("Items");
                 });
 

@@ -37,10 +37,10 @@ namespace Rahtk.Application.Features.product.Service
             return new BaseResponse<ProductEntity> { data = result, statusCode = 200, message = _languageService.Getkey("product_created_successfully").Value, success = true };
         }
 
-        public async Task<BaseResponse<ICollection<ProductEntity>>> GetAllProducts()
+        public async Task<BaseResponse<ICollection<ReadProductModel>>> GetAllProducts()
         {
             var result = await _unitOfWork.Product.GetAllProducts();
-            return new BaseResponse<ICollection<ProductEntity>> { data = result, statusCode = 200, success = true };
+            return new BaseResponse<ICollection<ReadProductModel>> { data = result.Select(e=>e.ToModel()).ToList(), statusCode = 200, success = true };
         }
 
         public async Task<BaseResponse<ICollection<ProductEntity>>> GetFavorites(string email)

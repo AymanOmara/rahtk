@@ -105,4 +105,7 @@
     <data name="reminder_added_successfully" xml:space="preserve">
         <value>تمت إضافة التذكير بنجاح</value>
     </data>
+    <data name="logut_successfully" xml:space="preserve">
+        <value>تم تسجيل الخروج بنجاح</value>
+    </data>
 </root>
