@@ -13,7 +13,7 @@
     <None Remove="Features\Categories\" />
     <None Remove="Features\Products\" />
     <None Remove="Features\Order\" />
-    <None Remove="Features\Pharmacy\" />
+    <None Remove="Features\Reminder\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\" />
@@ -22,7 +22,7 @@
     <Folder Include="Features\Categories\" />
     <Folder Include="Features\Products\" />
     <Folder Include="Features\Order\" />
-    <Folder Include="Features\Pharmacy\" />
+    <Folder Include="Features\Reminder\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />

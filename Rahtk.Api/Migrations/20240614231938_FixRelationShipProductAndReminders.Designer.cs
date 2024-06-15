@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Rahtk.Infrastructure.EF.Contexts;
 
@@ -11,9 +12,11 @@ using Rahtk.Infrastructure.EF.Contexts;
 namespace Rahtk.Api.Migrations
 {
     [DbContext(typeof(RahtkContext))]
-    partial class RahtkContextModelSnapshot : ModelSnapshot
+    [Migration("20240614231938_FixRelationShipProductAndReminders")]
+    partial class FixRelationShipProductAndReminders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,6 +156,21 @@ namespace Rahtk.Api.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("ProductEntityReminderEntity", b =>
+                {
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RemindersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductsId", "RemindersId");
+
+                    b.HasIndex("RemindersId");
+
+                    b.ToTable("ProductEntityReminderEntity");
                 });
 
             modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderEntity", b =>
@@ -336,29 +354,6 @@ namespace Rahtk.Api.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Rahtk.Domain.Features.Reminder.ProductReminder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ReminderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("ReminderId");
-
-                    b.ToTable("ProductReminder");
                 });
 
             modelBuilder.Entity("Rahtk.Domain.Features.Reminder.ReminderEntity", b =>
@@ -633,6 +628,21 @@ namespace Rahtk.Api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ProductEntityReminderEntity", b =>
+                {
+                    b.HasOne("Rahtk.Domain.Features.Products.ProductEntity", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Rahtk.Domain.Features.Reminder.ReminderEntity", null)
+                        .WithMany()
+                        .HasForeignKey("RemindersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Rahtk.Domain.Features.Order.OrderEntity", b =>
                 {
                     b.HasOne("Rahtk.Domain.Features.User.AddressEntity", "Address")
@@ -699,25 +709,6 @@ namespace Rahtk.Api.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Rahtk.Domain.Features.Reminder.ProductReminder", b =>
-                {
-                    b.HasOne("Rahtk.Domain.Features.Products.ProductEntity", "Product")
-                        .WithMany("Reminders")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Rahtk.Domain.Features.Reminder.ReminderEntity", "Reminder")
-                        .WithMany("Products")
-                        .HasForeignKey("ReminderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Reminder");
-                });
-
             modelBuilder.Entity("Rahtk.Domain.Features.Reminder.ReminderEntity", b =>
                 {
                     b.HasOne("Rahtk.Domain.Features.User.RahtkUser", "User")
@@ -769,13 +760,6 @@ namespace Rahtk.Api.Migrations
             modelBuilder.Entity("Rahtk.Domain.Features.Products.ProductEntity", b =>
                 {
                     b.Navigation("FavoriteProductUsers");
-
-                    b.Navigation("Reminders");
-                });
-
-            modelBuilder.Entity("Rahtk.Domain.Features.Reminder.ReminderEntity", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Rahtk.Domain.Features.User.RahtkUser", b =>

@@ -22,9 +22,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
         {
             var user = await _userManager.FindByEmailAsync(email);
             var allProducts = await _context.Products.ToListAsync();
-            var allDrugs = await _context.Drugs.ToListAsync();
             List<OrderItemEntity> selectedProduct = new();
-            List<OrderDrugItemEntity> selectedDrugs = new();
 
             foreach (var element in order?.OrderItemModel)
             {
@@ -36,17 +34,8 @@ namespace Rahtk.Infrastructure.EF.Repositories
                     selectedProduct.Add(new OrderItemEntity { ProductId = element.ProductId, ProductCounter = element.ProductCount });
                 }
             }
-            foreach (var element in order?.DrugItemModel)
-            {
-                var isFound = allDrugs.FirstOrDefault(pro => pro.Id == element.ProductId);
-                if (isFound != null)
-                {
-                    
-                    _context.Entry(isFound).State = EntityState.Modified;
-                    selectedDrugs.Add(new OrderDrugItemEntity { DrugId = element.ProductId, DrugCounter = element.ProductCount });
-                }
-            }
-            var orderEntity = new OrderEntity { Items = selectedProduct, PaymentMethod = order.PaymentMethod, PaymentOptionId = order.PaymentId, AddressId = order.AddressId, UserId = user.Id ,Drugs = selectedDrugs };
+
+            var orderEntity = new OrderEntity { Items = selectedProduct, PaymentMethod = order.PaymentMethod, PaymentOptionId = order.PaymentId, AddressId = order.AddressId, UserId = user.Id };
             await _context.Orders.AddAsync(orderEntity);
             await _context.SaveChangesAsync();
             return orderEntity;
@@ -55,9 +44,8 @@ namespace Rahtk.Infrastructure.EF.Repositories
         public async Task<ICollection<OrderEntity>> GetOrders(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            var result = await _context.Orders?.Include(or => or.Items)?.ThenInclude(pr => pr.Product)?.Include(dr => dr.Drugs)?.ThenInclude(dr => dr.Drug).Include(add => add.Address).Include(pay => pay.Payment).Where(or => or.UserId == user.Id).ToListAsync();
+            var result = await _context.Orders?.Include(or => or.Items)?.ThenInclude(pr => pr.Product).Include(add => add.Address).Include(pay => pay.Payment).Where(or => or.UserId == user.Id).ToListAsync();
             return result;
         }
     }
 }
-

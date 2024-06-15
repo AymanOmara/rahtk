@@ -5,10 +5,6 @@ namespace Rahtk.Infrastructure.EF.Services
 {
     public class NotificationSender : INotificationSender
     {
-        public NotificationSender()
-        {
-        }
-
         public async Task SendNotification(string deviceToken, string messageBody)
         {
             var message = new Message()

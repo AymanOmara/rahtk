@@ -24,10 +24,11 @@
     <None Remove="Features\Payment\DTO\" />
     <None Remove="Features\Payment\Service\" />
     <None Remove="Features\Order\" />
-    <None Remove="Features\Drug\" />
-    <None Remove="Features\Drug\Service\" />
-    <None Remove="Features\Drug\DTO\" />
     <None Remove="Features\User\DTO\" />
+    <None Remove="Features\Reminder\" />
+    <None Remove="Features\Reminder\DTO\" />
+    <None Remove="Features\Reminder\Service\" />
+    <None Remove="Features\Reminder\Mapper\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\" />
@@ -47,17 +48,15 @@
     <Folder Include="Features\Payment\DTO\" />
     <Folder Include="Features\Payment\Service\" />
     <Folder Include="Features\Order\" />
-    <Folder Include="Features\Drug\" />
-    <Folder Include="Features\Drug\Service\" />
-    <Folder Include="Features\Drug\DTO\" />
     <Folder Include="Features\User\DTO\" />
+    <Folder Include="Features\Reminder\" />
+    <Folder Include="Features\Reminder\DTO\" />
+    <Folder Include="Features\Reminder\Service\" />
+    <Folder Include="Features\Reminder\Mapper\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rahtk.Domain\Rahtk.Domain.csproj" />
     <ProjectReference Include="..\Rahtk.Shared\Rahtk.Shared.csproj" />
     <ProjectReference Include="..\Rahtk.Contracts\Rahtk.Contracts.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="13.0.1" />
   </ItemGroup>
 </Project>

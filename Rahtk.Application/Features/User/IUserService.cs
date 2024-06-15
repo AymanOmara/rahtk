@@ -27,6 +27,8 @@ namespace Rahtk.Application.Features
         Task<BaseResponse<ICollection<NotificationModel>>> GetNotifications(string email);
 
         Task<BaseResponse<bool>> Logout(string email);
+
+        Task<BaseResponse<bool>> RegisterFCM(string email,string token);
     }
 }
 

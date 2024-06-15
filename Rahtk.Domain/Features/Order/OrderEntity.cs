@@ -21,8 +21,6 @@ namespace Rahtk.Domain.Features.Order
 
         public ICollection<OrderItemEntity>? Items { get; set; }
 
-        public ICollection<OrderDrugItemEntity>? Drugs { get; set; }
-
         public PaymentOptionEntity? Payment { get; set; }
 
         [ForeignKey("PaymentOptionId")]

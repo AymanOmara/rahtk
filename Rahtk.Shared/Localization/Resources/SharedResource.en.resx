@@ -108,4 +108,14 @@
     <data name="logut_successfully" xml:space="preserve">
         <value>Logged out successfully</value>
     </data>
+    <data name="reminder_added_successfully" xml:space="preserve">
+        <value>Reminder added successfully</value>
+    </data>
+    <data name="reminder_deleted_successfully" xml:space="preserve">
+        <value>Reminder deleted successfully</value>
+    </data>
+    <data name="reminder_updated_successfully" xml:space="preserve">
+        <value>Reminder updated successfully</value>
+    </data>
+
 </root>

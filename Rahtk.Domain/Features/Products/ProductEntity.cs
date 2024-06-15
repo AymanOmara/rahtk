@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Rahtk.Domain.Features.Product;
+using Rahtk.Domain.Features.Reminder;
 
 namespace Rahtk.Domain.Features.Products
 {
@@ -46,5 +47,7 @@ namespace Rahtk.Domain.Features.Products
         public bool IsFavorite { get; set; }
 
         public ICollection<FavoriteProductUser>? FavoriteProductUsers { get; set; }
+
+        public ICollection<ProductReminder>? Reminders { get; set; }
     }
 }

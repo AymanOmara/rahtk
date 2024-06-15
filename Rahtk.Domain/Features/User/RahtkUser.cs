@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Rahtk.Domain.Features.Pharmacy;
 using Rahtk.Domain.Features.Products;
+using Rahtk.Domain.Features.Reminder;
 
 namespace Rahtk.Domain.Features.User
 {
@@ -22,7 +22,7 @@ namespace Rahtk.Domain.Features.User
 
         public ICollection<PaymentOptionEntity>? PaymentOptions { get; set; }
 
-        public ICollection<ReminderEntity>? PeriodicallyDrugs { get; set; }
+        public ICollection<ReminderEntity>? PeriodicallyOrders { get; set; }
 
         public ICollection<NotificationEntity>? Notifications { get; set; }
     }

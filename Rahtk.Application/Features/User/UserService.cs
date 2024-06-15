@@ -178,6 +178,12 @@ namespace Rahtk.Application.Features.User
             };
         }
 
+        public async Task<BaseResponse<bool>> RegisterFCM(string email, string token)
+        {
+            await _unitOfWork.Users.RegisterFCM(email, token);
+            return new BaseResponse<bool> { data = true, statusCode = 200};
+        }
+
         public async Task<BaseResponse<TokenModel>> SocailLogin(LoginDTO login)
         {
             var result = await _unitOfWork.Users.SocailLogin(login);

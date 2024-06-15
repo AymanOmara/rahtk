@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Domain.Features.Order;
-using Rahtk.Domain.Features.Pharmacy;
 using Rahtk.Domain.Features.Product;
 using Rahtk.Domain.Features.Products;
+using Rahtk.Domain.Features.Reminder;
 using Rahtk.Domain.Features.User;
 
 namespace Rahtk.Infrastructure.EF.Contexts
@@ -39,8 +39,6 @@ namespace Rahtk.Infrastructure.EF.Contexts
         public DbSet<PaymentOptionEntity> PaymentOptions { get; set; }
 
         public DbSet<OrderEntity> Orders { get; set; }
-
-        public DbSet<DrugEntity> Drugs { get; set; }
 
         public DbSet<ReminderEntity> Reminders { get; set; }
 

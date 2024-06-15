@@ -103,6 +103,13 @@ namespace Rahtk.Api.Controllers
 
             return result.ToResult();
         }
+        [Authorize]
+        [HttpPost("register-fcm-token")]
+        public async Task<IActionResult> RegisterFCM(string fcmToken) {
+            var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _userService.RegisterFCM(email, fcmToken);
+            return result.ToResult();
+        }
+        
     }
 }
-

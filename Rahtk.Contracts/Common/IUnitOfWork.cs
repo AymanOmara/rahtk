@@ -1,9 +1,9 @@
 ﻿using Rahtk.Contracts.Features;
 using Rahtk.Contracts.Features.Address;
-using Rahtk.Contracts.Features.Drug;
 using Rahtk.Contracts.Features.Order;
 using Rahtk.Contracts.Features.Payment;
 using Rahtk.Contracts.Features.products.Prodcut;
+using Rahtk.Contracts.Features.Reminder;
 using Rahtk.Contracts.Features.User;
 
 namespace Rahtk.Contracts.Common
@@ -37,7 +37,7 @@ namespace Rahtk.Contracts.Common
         {
             get;
         }
-        public IDrugRepository Drug
+        public IReminderRepository Reminder
         {
             get;
         }

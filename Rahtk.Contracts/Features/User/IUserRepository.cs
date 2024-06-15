@@ -26,6 +26,8 @@ namespace Rahtk.Contracts.Features.User
         Task<ICollection<NotificationEntity>> GetNotifications(string email);
 
         Task Logout(string email);
+
+        Task RegisterFCM(string email, string fcmToken);
     }
 }
 

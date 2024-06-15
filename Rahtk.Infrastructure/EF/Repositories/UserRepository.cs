@@ -24,7 +24,14 @@ namespace Rahtk.Infrastructure.EF.Repositories
         private readonly IConfiguration _configuration;
         private readonly IUserNotifier _userNotifier;
 
-        public UserRepository(RahtkContext context, UserManager<RahtkUser> userManager, SignInManager<RahtkUser> signInManager, LanguageService localization, IConfiguration configuration, IUserNotifier userNotifier)
+        public UserRepository(
+            RahtkContext context,
+            UserManager<RahtkUser> userManager,
+            SignInManager<RahtkUser> signInManager,
+            LanguageService localization,
+            IConfiguration configuration,
+            IUserNotifier userNotifier
+            )
         {
             _context = context;
             _signInManager = signInManager;
@@ -93,7 +100,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
             return token;
         }
 
-        private string RefreshTokenGeneration()
+        private static string RefreshTokenGeneration()
         {
             var randomNumber = new byte[32];
             using var rng = RandomNumberGenerator.Create();
@@ -247,6 +254,13 @@ namespace Rahtk.Infrastructure.EF.Repositories
         public async Task Logout(string email)
         {
             await _signInManager.SignOutAsync();
+        }
+
+        public async Task RegisterFCM(string email, string fcmToken)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            user.FcmToken = fcmToken;
+            await _userManager.UpdateAsync(user);
         }
     }
 }

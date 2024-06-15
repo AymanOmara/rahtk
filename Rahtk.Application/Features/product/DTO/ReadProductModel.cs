@@ -18,7 +18,7 @@
 
         public decimal DiscountPercentage { get; set; }
 
-        public string CraetedDate { get; set; }
+        public string CraetedDate { get; set; } = string.Empty;
 
         public int CategoryId { get; set; }
 

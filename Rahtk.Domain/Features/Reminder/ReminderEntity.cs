@@ -1,15 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Rahtk.Domain.Features.Products;
 using Rahtk.Domain.Features.User;
 
-namespace Rahtk.Domain.Features.Pharmacy
+namespace Rahtk.Domain.Features.Reminder
 {
     public class ReminderEntity
     {
         public int Id { get; set; }
 
-        public int DrugId { get; set; }
+        public string Title { get; set; } = string.Empty;
 
-        public DrugEntity? Drug { get; set; }
+        public ICollection<ProductReminder>? Products { get; set; }
 
         public DateTime ReminderDate { get; set; } = DateTime.Now;
 
@@ -21,4 +22,3 @@ namespace Rahtk.Domain.Features.Pharmacy
         public RahtkUser? User { get; set; }
     }
 }
-

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Rahtk.Application.Features.category.DTO;
+﻿using Rahtk.Application.Features.category.DTO;
 using Rahtk.Application.Features.category.mappers;
 using Rahtk.Contracts.Common;
 using Rahtk.Domain.Features.Product;
@@ -10,16 +9,15 @@ namespace Rahtk.Application.Features.category
     public class CategoryService : ICategoryService
     {
         private readonly IUnitOfWork _unitofWork;
-        private readonly IMapper _mapper;
-        public CategoryService(IUnitOfWork unitofWork, IMapper mapper)
+        
+        public CategoryService(IUnitOfWork unitofWork)
         {
             _unitofWork = unitofWork;
-            _mapper = mapper;
         }
 
         public async Task<BaseResponse<CategoryEntity>> CreateCategory(WriteOnlyCategoryModel category)
         {
-            var categoryEntity = _mapper.Map<CategoryEntity>(category);
+            var categoryEntity = category.ToEntity();
 
             var result =  await _unitofWork.Category.CreateCategory(category.file, categoryEntity);
 
@@ -33,4 +31,3 @@ namespace Rahtk.Application.Features.category
         }
     }
 }
-

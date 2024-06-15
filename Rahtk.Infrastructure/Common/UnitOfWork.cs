@@ -4,15 +4,14 @@ using Microsoft.Extensions.Configuration;
 using Rahtk.Contracts.Common;
 using Rahtk.Contracts.Features;
 using Rahtk.Contracts.Features.Address;
-using Rahtk.Contracts.Features.Drug;
 using Rahtk.Contracts.Features.Order;
 using Rahtk.Contracts.Features.Payment;
 using Rahtk.Contracts.Features.products.Prodcut;
+using Rahtk.Contracts.Features.Reminder;
 using Rahtk.Contracts.Features.User;
 using Rahtk.Domain.Features.User;
 using Rahtk.Infrastructure.EF.Contexts;
 using Rahtk.Infrastructure.EF.Repositories;
-using Rahtk.Infrastructure.EF.Services;
 using Rahtk.Shared.Localization;
 
 namespace Rahtk.Infrastructure.Common
@@ -31,7 +30,7 @@ namespace Rahtk.Infrastructure.Common
 
         public IOrderRepository Order { get; private set; }
 
-        public IDrugRepository Drug { get; private set; }
+        public IReminderRepository Reminder { get; private set; }
 
         private readonly RahtkContext _context;
         public readonly UserManager<RahtkUser> _userManager;
@@ -41,9 +40,18 @@ namespace Rahtk.Infrastructure.Common
         private readonly IUserNotifier _userNotifier;
         private readonly IFileService _fileService;
         private readonly INotificationSender _sender;
-        private readonly IReminderService _reminderService;
         private readonly IRecurringJobManager _recurringJobManager;
-        public UnitOfWork(LanguageService localization, RahtkContext context, UserManager<RahtkUser> userManager, SignInManager<RahtkUser> signInManager, IConfiguration configuration, IUserNotifier userNotifier, IFileService fileService, INotificationSender sender, IRecurringJobManager recurringJobManager)
+
+        public UnitOfWork(LanguageService localization,
+            RahtkContext context,
+            UserManager<RahtkUser> userManager,
+            SignInManager<RahtkUser> signInManager,
+            IConfiguration configuration,
+            IUserNotifier userNotifier,
+            IFileService fileService,
+            INotificationSender sender,
+            IRecurringJobManager recurringJobManager
+            )
         {
             _localization = localization;
             _context = context;
@@ -53,18 +61,18 @@ namespace Rahtk.Infrastructure.Common
             _userNotifier = userNotifier;
             _fileService = fileService;
             _sender = sender;
-            
+
             _recurringJobManager = recurringJobManager;
-            _reminderService = new ReminderService(_context, _recurringJobManager, _sender);
+
             InitializeRepositories();
         }
         private void InitializeRepositories()
         {
-            Users = new UserRepository(context:_context,userManager:_userManager,signInManager:_signInManager,localization:_localization,configuration:_configuration, _userNotifier);
+            Users = new UserRepository(context: _context, userManager: _userManager, signInManager: _signInManager, localization: _localization, configuration: _configuration, _userNotifier);
 
             Category = new CategoryRepository(_context, _localization, _fileService, _userManager, _sender);
 
-            Product = new ProductRepository(_context,_fileService,_userManager);
+            Product = new ProductRepository(_context, _fileService, _userManager);
 
             Address = new AddressRepository(_context, _userManager);
 
@@ -72,7 +80,11 @@ namespace Rahtk.Infrastructure.Common
 
             Order = new OrderRepository(_context, _userManager);
 
-            Drug = new DrugRepository(_context, _userManager, _fileService, _reminderService);
+            Reminder = new ReminderRepository(
+                _context,
+                _recurringJobManager,
+                _sender, _userManager
+                );
         }
     }
 }
