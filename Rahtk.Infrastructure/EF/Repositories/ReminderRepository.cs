@@ -78,6 +78,12 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
             var user = await _userManager.FindByEmailAsync(userEmail);
             var nextReminderDate = reminder.ReminderDate.AddMinutes(reminder.ReminderIntervalDays);
+            var productReminders = await _context.ProductReminder.Include(p=>p.Product).Where(e => e.ReminderId == reminder.Id).ToListAsync();
+            foreach (var item in productReminders) {
+
+                _context.Entry(item).State = EntityState.Deleted;
+            }
+
             reminder.ReminderDate = nextReminderDate;
             reminder.UserId = user.Id;
             reminder.Products.Clear();

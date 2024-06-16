@@ -42,6 +42,8 @@ namespace Rahtk.Infrastructure.EF.Contexts
 
         public DbSet<ReminderEntity> Reminders { get; set; }
 
+        public DbSet<ProductReminder> ProductReminder { get; set; }
+
         public DbSet<NotificationEntity> Notifications { get; set; }
     }
 }
