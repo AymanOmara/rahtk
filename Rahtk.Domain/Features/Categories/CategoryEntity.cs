@@ -13,5 +13,7 @@ namespace Rahtk.Domain.Features.Product
 		public string ImagePath { get; set; } = string.Empty;
 
 		public ICollection<ProductEntity>? Products { get; set; }
+
+		public bool Deleted { get; set; }
 	}
 }

@@ -33,6 +33,18 @@ namespace Rahtk.Application.Features.product.Service
             return new BaseResponse<ReadProductModel> { data = result.ToModel(), statusCode = 200, message = _languageService.Getkey("product_created_successfully").Value, success = true };
         }
 
+        public async Task<BaseResponse<bool>> DeleteProduct(int ProductId)
+        {
+            var result = await _unitOfWork.Product.DeleteProduct(ProductId);
+            return new BaseResponse<bool>
+            {
+                data = result,
+                statusCode = 200,
+                success = true,
+                message = _languageService.Getkey("product_deleted_successfully").Value
+            };
+        }
+
         public async Task<BaseResponse<ICollection<ReadProductModel>>> GetAllProducts()
         {
             var result = await _unitOfWork.Product.GetAllProducts();

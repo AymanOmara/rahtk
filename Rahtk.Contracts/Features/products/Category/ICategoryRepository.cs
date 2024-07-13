@@ -8,5 +8,7 @@ namespace Rahtk.Contracts.Features
         Task<ICollection<CategoryEntity>> GetAllCategories(string email);
 
         Task<CategoryEntity> CreateCategory(IFormFile file, CategoryEntity category);
+
+        Task<bool> DeleteCategory(int CategoryId);
     }
 }

@@ -253,6 +253,9 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
         public async Task Logout(string email)
         {
+            var user = await _userManager.FindByEmailAsync(email);
+            user.FcmToken = "";
+            await _userManager.UpdateAsync(user);
             await _signInManager.SignOutAsync();
         }
 

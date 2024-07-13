@@ -49,5 +49,7 @@ namespace Rahtk.Domain.Features.Products
         public ICollection<FavoriteProductUser>? FavoriteProductUsers { get; set; }
 
         public ICollection<ProductReminder>? Reminders { get; set; }
+
+		public bool Deleted { get; set; }
     }
 }

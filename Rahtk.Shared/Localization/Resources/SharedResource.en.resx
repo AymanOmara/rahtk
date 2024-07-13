@@ -117,5 +117,10 @@
     <data name="reminder_updated_successfully" xml:space="preserve">
         <value>Reminder updated successfully</value>
     </data>
-
+    <data name="category_deleted_successfully" xml:space="preserve">
+        <value>Category Deleted successfully</value>
+    </data>
+    <data name="product_deleted_successfully" xml:space="preserve">
+        <value>Product Deleted Successfully</value>
+    </data>
 </root>

@@ -28,7 +28,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
         public async Task<ICollection<ProductEntity>> GetAllProducts()
         {
-            var products = await _context.Products.ToListAsync();
+            var products = await _context.Products.Where(pr=>!pr.Deleted).ToListAsync();
 
             return products;
         }
@@ -100,6 +100,15 @@ namespace Rahtk.Infrastructure.EF.Repositories
                 product.IsFavorite = true;
             }
             return product;
+        }
+
+        public async Task<bool> DeleteProduct(int ProductId)
+        {
+            var product = await _context.Products.FindAsync(ProductId);
+            product.Deleted = true;
+            _context.Entry(product).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -9,5 +9,7 @@ namespace Rahtk.Application.Features.category
         Task<BaseResponse<CategoryEntity>> CreateCategory(WriteOnlyCategoryModel category);
 
         Task<BaseResponse<ICollection<ReadCategoryModel>>> GetAllCategories(string userId);
+
+        Task<BaseResponse<bool>> DeleteCategory(int CategoryId);
     }
 }

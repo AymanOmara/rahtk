@@ -49,9 +49,22 @@ namespace Rahtk.Infrastructure.EF.Repositories
             return category;
         }
 
+        public async Task<bool> DeleteCategory(int CategoryId)
+        {
+            var category = await _context.Categories.FindAsync(CategoryId);
+            category.Deleted = true;
+            _context.Entry(category).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<ICollection<CategoryEntity>> GetAllCategories(string email)
         {
-            var categories = await _context.Categories.Include(cat => cat.Products).ToListAsync();
+            var categories = await _context
+                .Categories
+                .Where(cat => !cat.Deleted)
+                .Include(cat => cat.Products)
+                .ToListAsync();
             var user = await _userManager.FindByEmailAsync(email);
             var favoriteProductIds = await _context.FavoriteProductUser
                 .Where(fpu => fpu.UserId == user.Id)
@@ -64,7 +77,14 @@ namespace Rahtk.Infrastructure.EF.Repositories
                     product.IsFavorite = favoriteProductIds.Contains(product.Id);
                 }
             }
-            return categories;
+            return categories.Select(cat => new CategoryEntity
+            {
+                Id = cat.Id,
+                ImagePath = cat.ImagePath,
+                EnglishName = cat.EnglishName,
+                ArabicName = cat.ArabicName,
+                Products = cat.Products.Where(pr => !pr.Deleted).ToList()
+            }).ToList();
         }
 
     }

@@ -31,5 +31,12 @@ namespace Rahtk.Api.Controllers
             var result = await _categoryApplication.GetAllCategories(email);
             return result.ToResult();
         }
+
+        [HttpDelete("delete-category")]
+        public async Task<IActionResult> DeleteCategory(int categoryId)
+        {
+            var result = await _categoryApplication.DeleteCategory(categoryId);
+            return result.ToResult();
+        }
     }
 }

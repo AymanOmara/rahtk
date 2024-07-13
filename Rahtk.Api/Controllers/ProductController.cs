@@ -57,5 +57,12 @@ namespace Rahtk.Api.Controllers
             var result = await _productService.ProductDetails(email, ProductId);
             return result.ToResult();
         }
+
+        [HttpDelete("delete-product")]
+        public async Task<IActionResult> DeleteProduct(int ProductId)
+        {
+            var result = await _productService.DeleteProduct(ProductId);
+            return result.ToResult();
+        }
     }
 }

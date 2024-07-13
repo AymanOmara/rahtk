@@ -16,6 +16,7 @@ namespace Rahtk.Contracts.Features.products.Prodcut
         Task<ICollection<ProductEntity>> GetFavorites(string email);
 
         Task<ProductEntity> GetProductDetails(string userEmail, int productId);
+
+        Task<bool> DeleteProduct(int ProductId);
     }
 }
-

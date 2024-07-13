@@ -117,5 +117,10 @@
     <data name="reminder_updated_successfully" xml:space="preserve">
         <value>تم تحديث التذكير بنجاح</value>
     </data>
-
+    <data name="category_deleted_successfully" xml:space="preserve">
+        <value>تم حذف التصنيف بنجاح</value>
+    </data>
+    <data name="product_deleted_successfully" xml:space="preserve">
+        <value>تم حذف المنتج بنجاح</value>
+    </data>
 </root>
