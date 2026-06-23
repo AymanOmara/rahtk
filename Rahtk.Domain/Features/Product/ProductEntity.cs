@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Rahtk.Domain.Features.Product;
 using Rahtk.Domain.Features.Reminder;
+using Rahtk.Domain.Features.Category;
 
 namespace Rahtk.Domain.Features.Product
 {

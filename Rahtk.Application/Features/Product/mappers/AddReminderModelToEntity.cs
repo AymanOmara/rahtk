@@ -1,8 +1,8 @@
-﻿using Rahtk.Application.Features.Product.mappers;
-using Rahtk.Application.Features.Reminder.mappers;
+﻿using Rahtk.Application.Features.Reminder.Mapper;
+using Rahtk.Application.Features.Reminder.DTO;
 using Rahtk.Domain.Features.Reminder;
 
-namespace Rahtk.Application.Features.Product.DTO
+namespace Rahtk.Application.Features.Product.mappers
 {
     public static class AddReminderModelToEntity
     {

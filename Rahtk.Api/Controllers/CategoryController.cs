@@ -3,24 +3,19 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rahtk.Api.Utils;
 using Rahtk.Application.Features.Category;
+using Rahtk.Application.Features.Category.DTO;
 
 namespace Rahtk.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class CategoryController : ControllerBase
+    public class CategoryController(ICategoryService categoryApplication) : ControllerBase
     {
-        private readonly ICategoryService _categoryApplication;
-        public CategoryController(ICategoryService categoryApplication)
-        {
-            _categoryApplication = categoryApplication;
-        }
-
         [HttpPost("add-category")]
         public async Task<IActionResult> CraeteCategory([FromForm] WriteOnlyCategoryModel category)
         {
-            var result = await _categoryApplication.CreateCategory(category);
+            var result = await categoryApplication.CreateCategory(category);
             return result.ToResult();
         }
 
@@ -28,14 +23,14 @@ namespace Rahtk.Api.Controllers
         public async Task<IActionResult> GetAllCategories()
         {
             var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _categoryApplication.GetAllCategories(email);
+            var result = await categoryApplication.GetAllCategories(email);
             return result.ToResult();
         }
 
         [HttpDelete("delete-category")]
         public async Task<IActionResult> DeleteCategory(int categoryId)
         {
-            var result = await _categoryApplication.DeleteCategory(categoryId);
+            var result = await categoryApplication.DeleteCategory(categoryId);
             return result.ToResult();
         }
     }

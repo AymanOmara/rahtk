@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Rahtk.Application.Features.Category
+namespace Rahtk.Application.Features.Category.DTO
 {
-	public class WriteOnlyCategoryModel
-	{
-        public string ArabicName { get; set; }
-
-        public string EnglishName { get; set; }
-
-        public IFormFile file  { get; set; }
-    }
+	public record WriteOnlyCategoryModel(
+        string ArabicName,
+        string EnglishName,
+        IFormFile file
+    );
 }
 

@@ -18,7 +18,7 @@ namespace Rahtk.Shared.Localization
             _localizer = factory.Create(nameof(SharedResource), assemblyName.Name);
         }
 
-        public LocalizedString Getkey(string key)
+        public LocalizedString GetKey(string key)
         {
             return _localizer[key];
         }

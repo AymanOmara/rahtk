@@ -1,6 +1,6 @@
 ﻿using Rahtk.Domain.Features.Product;
 
-namespace Rahtk.Domain.Features.Product
+namespace Rahtk.Domain.Features.Category
 {
 	public class CategoryEntity
 	{

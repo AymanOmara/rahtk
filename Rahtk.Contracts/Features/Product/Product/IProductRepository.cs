@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Rahtk.Domain.Features.Product;
 
-namespace Rahtk.Contracts.Features.Product.Prodcut
+namespace Rahtk.Contracts.Features.Product.Product
 {
     public interface IProductRepository
     {

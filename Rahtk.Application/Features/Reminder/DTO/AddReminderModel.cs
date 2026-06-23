@@ -1,6 +1,6 @@
 ﻿using Rahtk.Application.Features.Reminder.DTO;
 
-namespace Rahtk.Application.Features.Product.DTO
+namespace Rahtk.Application.Features.Reminder.DTO
 {
 	public class AddReminderModel
 	{

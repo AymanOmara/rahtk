@@ -1,70 +1,47 @@
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Common;
-using Rahtk.Contracts.Features;
+using Rahtk.Contracts.Features.Product.Category;
 using Rahtk.Domain.Features.Product;
 using Rahtk.Domain.Features.User;
+using Rahtk.Domain.Features.Category;
 using Rahtk.Infrastructure.EF.Contexts;
 using Rahtk.Shared.Localization;
 
 namespace Rahtk.Infrastructure.EF.Repositories
 {
-    public class CategoryRepository : ICategoryRepository
+    public class CategoryRepository(RahtkContext context, IFileService fileService, UserManager<RahtkUser> userManager) : ICategoryRepository
     {
-        private readonly RahtkContext _context;
-
-        private readonly LanguageService _languageService;
-
-        private readonly IFileService _fileService;
-
-        private readonly UserManager<RahtkUser> _userManager;
-
-        private readonly INotificationSender _sender;
-
-        public CategoryRepository(RahtkContext context, LanguageService languageService, IFileService fileService, UserManager<RahtkUser> userManager, INotificationSender sender)
-        {
-            _context = context;
-
-            _languageService = languageService;
-
-            _fileService = fileService;
-
-            _userManager = userManager;
-
-            _sender = sender;
-
-        }
-
         public async Task<CategoryEntity> CreateCategory(IFormFile file, CategoryEntity category)
         {
-            var path = await _fileService.SaveFileAsync(file);
+            var path = await fileService.SaveFileAsync(file);
 
             category.ImagePath = path;
 
-            await _context.Categories.AddAsync(category);
+            await context.Categories.AddAsync(category);
 
             return category;
         }
 
         public async Task<bool> DeleteCategory(int CategoryId)
         {
-            var category = await _context.Categories.FindAsync(CategoryId);
+            var category = await context.Categories.FindAsync(CategoryId);
             category.Deleted = true;
-            _context.Entry(category).State = EntityState.Modified;
+            context.Entry(category).State = EntityState.Modified;
             return true;
         }
 
         public async Task<ICollection<CategoryEntity>> GetAllCategories(string email)
         {
-            var categories = await _context
+            var categories = await context
                 .Categories
                 .AsNoTracking()
                 .Where(cat => !cat.Deleted)
                 .Include(cat => cat.Products)
                 .ToListAsync();
-            var user = await _userManager.FindByEmailAsync(email);
-            var favoriteProductIds = await _context.FavoriteProductUser
+            var user = await userManager.FindByEmailAsync(email);
+            var favoriteProductIds = await context.FavoriteProductUser
                 .AsNoTracking()
                 .Where(fpu => fpu.UserId == user.Id)
                 .Select(fpu => fpu.ProductId)
@@ -85,7 +62,5 @@ namespace Rahtk.Infrastructure.EF.Repositories
                 Products = cat.Products.Where(pr => !pr.Deleted).ToList()
             }).ToList();
         }
-
     }
 }
-

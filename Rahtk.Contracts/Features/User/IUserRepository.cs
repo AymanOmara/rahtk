@@ -13,7 +13,7 @@ namespace Rahtk.Contracts.Features.User
 
         Task<Result<TokenModel, Exception>> RefreshToken(TokenModel token);
 
-        Task<Result<TokenModel, Exception>> SocailLogin(LoginDTO login);
+        Task<Result<TokenModel, Exception>> SocialLogin(LoginDTO login);
 
         Task<Result<string, Exception>> EmailVerification(string email);
 

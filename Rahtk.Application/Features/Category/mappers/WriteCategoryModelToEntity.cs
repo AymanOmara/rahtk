@@ -1,4 +1,5 @@
-﻿using Rahtk.Domain.Features.Product;
+﻿using Rahtk.Domain.Features.Category;
+using Rahtk.Application.Features.Category.DTO;
 
 namespace Rahtk.Application.Features.Category.mappers
 {

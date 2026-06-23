@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Features.Order;
 using Rahtk.Domain.Features.Order;
@@ -7,22 +7,13 @@ using Rahtk.Infrastructure.EF.Contexts;
 
 namespace Rahtk.Infrastructure.EF.Repositories
 {
-    public class OrderRepository : IOrderRepository
+    public class OrderRepository(RahtkContext context, UserManager<RahtkUser> userManager) : IOrderRepository
     {
-        private readonly RahtkContext _context;
-        private readonly UserManager<RahtkUser> _userManager;
-        public OrderRepository(RahtkContext context, UserManager<RahtkUser> userManager)
-        {
-            _context = context;
-
-            _userManager = userManager;
-        }
-
         public async Task<OrderEntity> CreateOrder(CreateOrderModel order, string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(email);
             var productIds = order?.OrderItemModel?.Select(e => e.ProductId).ToList() ?? new List<int>();
-            var selectedProducts = await _context.Products.Where(pro => productIds.Contains(pro.Id)).ToListAsync();
+            var selectedProducts = await context.Products.Where(pro => productIds.Contains(pro.Id)).ToListAsync();
             List<OrderItemEntity> selectedProduct = new();
 
             if (order?.OrderItemModel != null)
@@ -33,21 +24,21 @@ namespace Rahtk.Infrastructure.EF.Repositories
                     if (isFound != null)
                     {
                         isFound.PurchasementCount += 1;
-                        _context.Entry(isFound).State = EntityState.Modified;
+                        context.Entry(isFound).State = EntityState.Modified;
                         selectedProduct.Add(new OrderItemEntity { ProductId = element.ProductId, ProductCounter = element.ProductCount });
                     }
                 }
             }
 
             var orderEntity = new OrderEntity { Items = selectedProduct, PaymentMethod = order?.PaymentMethod, PaymentOptionId = order?.PaymentId, AddressId = order?.AddressId, UserId = user.Id };
-            await _context.Orders.AddAsync(orderEntity);
+            await context.Orders.AddAsync(orderEntity);
             return orderEntity;
         }
 
         public async Task<ICollection<OrderEntity>> GetOrders(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            var result = await _context.Orders.AsNoTracking().Include(or => or.Items).ThenInclude(pr => pr.Product).Include(add => add.Address).Include(pay => pay.Payment).Where(or => or.UserId == user.Id).ToListAsync();
+            var user = await userManager.FindByEmailAsync(email);
+            var result = await context.Orders.AsNoTracking().Include(or => or.Items).ThenInclude(pr => pr.Product).Include(add => add.Address).Include(pay => pay.Payment).Where(or => or.UserId == user.Id).ToListAsync();
             return result;
         }
     }

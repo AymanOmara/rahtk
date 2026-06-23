@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Rahtk.Domain.Features.Product;
+using Rahtk.Domain.Features.Category;
 
-namespace Rahtk.Contracts.Features
+namespace Rahtk.Contracts.Features.Product.Category
 {
     public interface ICategoryRepository
     {

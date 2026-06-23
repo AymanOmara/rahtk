@@ -1,4 +1,4 @@
-﻿namespace Rahtk.Application.Features.Product.mappers
+﻿namespace Rahtk.Application.Features.Product.DTO
 {
     public class ReadProductModel
     {

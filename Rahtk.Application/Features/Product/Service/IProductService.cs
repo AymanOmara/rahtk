@@ -2,7 +2,7 @@
 using Rahtk.Application.Features.Product.mappers;
 using Rahtk.Shared.Models;
 
-namespace Rahtk.Application.Features.Product
+namespace Rahtk.Application.Features.Product.Service
 {
     public interface IProductService
     {
@@ -18,6 +18,6 @@ namespace Rahtk.Application.Features.Product
 
         Task<BaseResponse<ReadProductModel>> ProductDetails(string userEmail, int productId);
 
-        Task<BaseResponse<bool>> DeleteProduct(int ProductId);
+        Task<BaseResponse<bool>> DeleteProduct(int productId);
     }
 }

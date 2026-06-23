@@ -1,4 +1,4 @@
-﻿using Rahtk.Application.Features.Product.mappers;
+﻿using Rahtk.Application.Features.Product.DTO;
 
 namespace Rahtk.Application.Features.Reminder.DTO
 {

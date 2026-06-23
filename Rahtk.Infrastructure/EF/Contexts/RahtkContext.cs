@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Domain.Features.Order;
 using Rahtk.Domain.Features.Product;
-using Rahtk.Domain.Features.Product;
 using Rahtk.Domain.Features.Reminder;
 using Rahtk.Domain.Features.User;
+using Rahtk.Domain.Features.Category;
 
 namespace Rahtk.Infrastructure.EF.Contexts
 {

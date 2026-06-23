@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Features.Payment;
 using Rahtk.Domain.Features.User;
@@ -6,28 +6,20 @@ using Rahtk.Infrastructure.EF.Contexts;
 
 namespace Rahtk.Infrastructure.EF.Repositories
 {
-	public class PaymentRepository: IPaymentRepository
+	public class PaymentRepository(RahtkContext context, UserManager<RahtkUser> userManager) : IPaymentRepository
     {
-        private readonly RahtkContext _context;
-        private readonly UserManager<RahtkUser> _userManager;
-        public PaymentRepository(RahtkContext context, UserManager<RahtkUser> userManager)
-		{
-            _context = context;
-            _userManager = userManager;
-		}
-
         public async Task<ICollection<PaymentOptionEntity>> GetPaymentOptions(string userEmail)
         {
-            var user = await _userManager.FindByEmailAsync(userEmail);
-            var result = await _context.PaymentOptions.AsNoTracking().Where(add => add.RahtkUserId == user.Id).ToListAsync();
+            var user = await userManager.FindByEmailAsync(userEmail);
+            var result = await context.PaymentOptions.AsNoTracking().Where(add => add.RahtkUserId == user.Id).ToListAsync();
             return result;
         }
 
         public async Task<PaymentOptionEntity> CreatePaymentOption(string userEmail, PaymentOptionEntity paymentOption)
         {
-            var user = await _userManager.FindByEmailAsync(userEmail);
+            var user = await userManager.FindByEmailAsync(userEmail);
             paymentOption.RahtkUserId = user.Id;
-            await _context.PaymentOptions.AddAsync(paymentOption);
+            await context.PaymentOptions.AddAsync(paymentOption);
             return paymentOption;
         }
     }

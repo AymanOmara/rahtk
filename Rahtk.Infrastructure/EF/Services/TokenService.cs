@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -10,22 +10,13 @@ using Rahtk.Domain.Features.User;
 
 namespace Rahtk.Infrastructure.EF.Services
 {
-    public class TokenService : ITokenService
+    public class TokenService(IConfiguration configuration, UserManager<RahtkUser> userManager) : ITokenService
     {
-        private readonly IConfiguration _configuration;
-        private readonly UserManager<RahtkUser> _userManager;
-
-        public TokenService(IConfiguration configuration, UserManager<RahtkUser> userManager)
-        {
-            _configuration = configuration;
-            _userManager = userManager;
-        }
-
         public async Task<TokenModel> CreateJwtToken(RahtkUser user)
         {
-            var roles = await _userManager.GetRolesAsync(user);
+            var roles = await userManager.GetRolesAsync(user);
 
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? ""));
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? ""));
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -36,8 +27,8 @@ namespace Rahtk.Infrastructure.EF.Services
                     new Claim(JwtRegisteredClaimNames.Sub, user.UserName ?? ""),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
-                    new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"] ?? ""),
-                    new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"] ?? ""),
+                    new Claim(JwtRegisteredClaimNames.Iss, configuration["Jwt:Issuer"] ?? ""),
+                    new Claim(JwtRegisteredClaimNames.Aud, configuration["Jwt:Audience"] ?? ""),
                     new Claim("uid", user.Id),
                 }),
                 Expires = DateTime.UtcNow.AddHours(12),
@@ -62,7 +53,7 @@ namespace Rahtk.Infrastructure.EF.Services
                 ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? "")),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? "")),
                 ValidateLifetime = false
             };
 

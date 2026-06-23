@@ -1,4 +1,4 @@
-using Rahtk.Application.Features.Payment.DTO;
+﻿using Rahtk.Application.Features.Payment.DTO;
 using Rahtk.Contracts.Common;
 using Rahtk.Domain.Features.User;
 using Rahtk.Shared.Localization;
@@ -21,7 +21,7 @@ namespace Rahtk.Application.Features.Payment.Service
             var result = await _unitOfWork.Payment.CreatePaymentOption(userId,paymentOptionModel.ToEntity());
             await _unitOfWork.SaveChangesAsync();
 
-            return new BaseResponse<PaymentOptionEntity> { Data = result, Message = _languageService.Getkey("payment_option_added_successfully").Value, StatusCode = 200, Success = true };
+            return new BaseResponse<PaymentOptionEntity> { Data = result, Message = _languageService.GetKey("payment_option_added_successfully").Value, StatusCode = 200, Success = true };
         }
 
         public async Task<BaseResponse<ICollection<PaymentOptionEntity>>> GetPaymentOptions(string userId)

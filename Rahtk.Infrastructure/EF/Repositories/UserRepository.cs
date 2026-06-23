@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -15,35 +15,21 @@ using Rahtk.Shared.Models;
 
 namespace Rahtk.Infrastructure.EF.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository(
+        RahtkContext context,
+        UserManager<RahtkUser> userManager,
+        SignInManager<RahtkUser> signInManager,
+        LanguageService localization,
+        IUserNotifier userNotifier,
+        ITokenService tokenService
+        ) : IUserRepository
     {
-        private readonly RahtkContext _context;
-        public readonly UserManager<RahtkUser> _userManager;
-        public readonly SignInManager<RahtkUser> _signInManager;
-        private readonly LanguageService _localization;
-        private readonly IConfiguration _configuration;
-        private readonly IUserNotifier _userNotifier;
-        private readonly ITokenService _tokenService;
-
-        public UserRepository(
-            RahtkContext context,
-            UserManager<RahtkUser> userManager,
-            SignInManager<RahtkUser> signInManager,
-            LanguageService localization,
-            IConfiguration configuration,
-            IUserNotifier userNotifier,
-            ITokenService tokenService
-            )
-        {
-            _context = context;
-            _signInManager = signInManager;
-            _userManager = userManager;
-            _localization = localization;
-            _configuration = configuration;
-            _userNotifier = userNotifier;
-            _tokenService = tokenService;
-
-        }
+        private readonly RahtkContext _context = context;
+        public readonly UserManager<RahtkUser> _userManager = userManager;
+        public readonly SignInManager<RahtkUser> _signInManager = signInManager;
+        private readonly LanguageService _localization = localization;
+        private readonly IUserNotifier _userNotifier = userNotifier;
+        private readonly ITokenService _tokenService = tokenService;
         public async Task<ProfileEntity> GetProfileInfo(string email)
         {
 
@@ -55,7 +41,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
             var isUserExict = await IsUserExist(registration.Email);
             if (isUserExict)
             {
-                return new Exception(_localization.Getkey("user_already_exists").Value);
+                return new Exception(_localization.GetKey("user_already_exists").Value);
 
             }
             RahtkUser user = new()
@@ -75,7 +61,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
                 return new Exception(string.Join(",", result.Errors.ToList()));
             }
 
-            return _localization.Getkey("user_created_success_fully").Value;
+            return _localization.GetKey("user_created_success_fully").Value;
         }
 
         public async Task<bool> IsUserExist(string email)
@@ -89,12 +75,12 @@ namespace Rahtk.Infrastructure.EF.Repositories
             var user = await _userManager.FindByEmailAsync(d.Email);
             if (user == null)
             {
-                return new Exception(_localization.Getkey("invalid_user_name").Value);
+                return new Exception(_localization.GetKey("invalid_user_name").Value);
             }
             var result = await _userManager.CheckPasswordAsync(user, d.Password);
             if (!result)
             {
-                return new Exception(_localization.Getkey("invalid_password").Value);
+                return new Exception(_localization.GetKey("invalid_password").Value);
             }
             var token = await _tokenService.CreateJwtToken(user);
             user.RefreshToken = token.RefreshToken;
@@ -114,10 +100,9 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
 
 
-        public async Task<Result<TokenModel, Exception>> SocailLogin(LoginDTO login)
+        public async Task<Result<TokenModel, Exception>> SocialLogin(LoginDTO login)
         {
             var user = await _userManager.FindByEmailAsync(login.Email);
-
             if (user == null)
             {
                 RahtkUser rahtkUser = new()
@@ -125,12 +110,11 @@ namespace Rahtk.Infrastructure.EF.Repositories
                     Email = login.Email,
                     UserName = login.Email,
                     EmailConfirmed = true,
-
                 };
                 var userCreationResult = await _userManager.CreateAsync(rahtkUser);
                 if (!userCreationResult.Succeeded)
                 {
-                    return new Exception(_localization.Getkey("error_try_agian_later").Value);
+                    return new Exception(_localization.GetKey("error_try_again_later").Value);
                 }
                 user = rahtkUser;
             }
@@ -147,15 +131,15 @@ namespace Rahtk.Infrastructure.EF.Repositories
             var isUserExist = user != null;
             if (!isUserExist)
             {
-                return new Exception(_localization.Getkey("email_not_exists").Value);
+                return new Exception(_localization.GetKey("email_not_exists").Value);
             }
             Random random = new Random();
             int randomNumber = random.Next(1000, 10000);
             user.VerificationToken = randomNumber.ToString();
             await _userManager.UpdateAsync(user);
 
-            await _userNotifier.Notify(email, $"{_localization.Getkey("your_email_verification_is").Value} {randomNumber}");
-            return _localization.Getkey("verfification_email_sent").Value;
+            await _userNotifier.Notify(email, $"{_localization.GetKey("your_email_verification_is").Value} {randomNumber}");
+            return _localization.GetKey("verification_email_sent").Value;
         }
 
         public async Task<Result<string, Exception>> VerifyOTP(string otp, string email)
@@ -164,13 +148,13 @@ namespace Rahtk.Infrastructure.EF.Repositories
             var isUserExist = user != null;
             if (!isUserExist)
             {
-                return new Exception(_localization.Getkey("email_not_exists").Value);
+                return new Exception(_localization.GetKey("email_not_exists").Value);
             }
             if (otp != user.VerificationToken)
             {
-                return new Exception(_localization.Getkey("wrong_otp").Value);
+                return new Exception(_localization.GetKey("wrong_otp").Value);
             }
-            return _localization.Getkey("correct_otp").Value;
+            return _localization.GetKey("correct_otp").Value;
         }
 
         public async Task<Result<string, Exception>> ForgetPassword(ForgetPasswordModel forgetPassword)
@@ -179,17 +163,17 @@ namespace Rahtk.Infrastructure.EF.Repositories
             var isUserExist = user != null;
             if (!isUserExist)
             {
-                return new Exception(_localization.Getkey("email_not_exists").Value);
+                return new Exception(_localization.GetKey("email_not_exists").Value);
             }
 
             if (user.VerificationToken != forgetPassword.OTP)
             {
-                return new Exception(_localization.Getkey("wrong_otp").Value);
+                return new Exception(_localization.GetKey("wrong_otp").Value);
             }
             await _userManager.RemovePasswordAsync(user);
             await _userManager.AddPasswordAsync(user, forgetPassword.Password);
             await _userManager.UpdateAsync(user);
-            return _localization.Getkey("password_changed_successfully").Value;
+            return _localization.GetKey("password_changed_successfully").Value;
         }
 
         public async Task<Result<string, Exception>> ChangePassword(string newPassword, string currentPassword, string email)
@@ -199,11 +183,11 @@ namespace Rahtk.Infrastructure.EF.Repositories
             {
                 await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
             }
-            catch (Exception _)
+            catch (Exception)
             {
-                return new Exception(_localization.Getkey("error_change_password").Value);
+                return new Exception(_localization.GetKey("error_change_password").Value);
             }
-            return _localization.Getkey("password_changed_successfully").Value;
+            return _localization.GetKey("password_changed_successfully").Value;
         }
 
         public async Task<Result<TokenModel, Exception>> RefreshToken(TokenModel oldToken)
@@ -216,18 +200,18 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
                 if (string.IsNullOrEmpty(email))
                 {
-                    return new Exception(_localization.Getkey("user_not_found").Value);
+                    return new Exception(_localization.GetKey("user_not_found").Value);
                 }
 
                 var user = await _userManager.FindByEmailAsync(email);
                 if (user == null)
                 {
-                    return new Exception(_localization.Getkey("user_not_found").Value);
+                    return new Exception(_localization.GetKey("user_not_found").Value);
                 }
 
                 if (user.RefreshToken != oldToken.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
                 {
-                    return new Exception(_localization.Getkey("invalid_token").Value);
+                    return new Exception(_localization.GetKey("invalid_token").Value);
                 }
 
                 var token = await _tokenService.CreateJwtToken(user);

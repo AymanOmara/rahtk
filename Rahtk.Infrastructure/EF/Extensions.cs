@@ -1,4 +1,4 @@
-using FirebaseAdmin;
+﻿using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Hangfire;
 using Hangfire.SqlServer;
@@ -13,9 +13,10 @@ using Rahtk.Contracts.Features;
 using Rahtk.Contracts.Features.Address;
 using Rahtk.Contracts.Features.Order;
 using Rahtk.Contracts.Features.Payment;
-using Rahtk.Contracts.Features.Product.Prodcut;
+using Rahtk.Contracts.Features.Product.Product;
 using Rahtk.Contracts.Features.Reminder;
 using Rahtk.Contracts.Features.User;
+using Rahtk.Contracts.Features.Product.Category;
 using Rahtk.Domain.Features.User;
 using Rahtk.Infrastructure.Common;
 using Rahtk.Infrastructure.EF.Contexts;

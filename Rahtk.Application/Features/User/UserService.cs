@@ -1,4 +1,4 @@
-using FluentValidation;
+﻿using FluentValidation;
 using Rahtk.Application.Features.User.DTO;
 using Rahtk.Contracts.Common;
 using Rahtk.Domain.Features.User;
@@ -7,28 +7,15 @@ using Rahtk.Shared.Models;
 
 namespace Rahtk.Application.Features.User
 {
-    public class UserService : IUserService
+    public class UserService(
+        IUnitOfWork unitOfWork, 
+        LanguageService languageService,
+        IValidator<RegistrationDTO> registrationValidator,
+        IValidator<LoginDTO> loginValidator) : IUserService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly LanguageService _languageService;
-        private readonly IValidator<RegistrationDTO> _registrationValidator;
-        private readonly IValidator<LoginDTO> _loginValidator;
-
-        public UserService(
-            IUnitOfWork unitOfWork, 
-            LanguageService languageService,
-            IValidator<RegistrationDTO> registrationValidator,
-            IValidator<LoginDTO> loginValidator)
-        {
-            _unitOfWork = unitOfWork;
-            _languageService = languageService;
-            _registrationValidator = registrationValidator;
-            _loginValidator = loginValidator;
-        }
-
         public async Task<BaseResponse<bool>> ChangePassword(string newPassword, string currentPassword, string userId)
         {
-            var result = await _unitOfWork.Users.ChangePassword(newPassword: newPassword, currentPassword, userId: userId);
+            var result = await unitOfWork.Users.ChangePassword(newPassword: newPassword, currentPassword, userId: userId);
             if (!result.IsOk)
             {
                 return new BaseResponse<bool>
@@ -48,7 +35,7 @@ namespace Rahtk.Application.Features.User
 
         public async Task<BaseResponse<bool>> CreateUser(RegistrationDTO registration)
         {
-            var validationResult = await _registrationValidator.ValidateAsync(registration);
+            var validationResult = await registrationValidator.ValidateAsync(registration);
             if (!validationResult.IsValid)
             {
                 return new BaseResponse<bool>()
@@ -58,7 +45,7 @@ namespace Rahtk.Application.Features.User
                 };
             }
 
-            var result = await _unitOfWork.Users.CreateUser(registration);
+            var result = await unitOfWork.Users.CreateUser(registration);
             if (!result.IsOk)
             {
                 return new BaseResponse<bool>()
@@ -81,7 +68,7 @@ namespace Rahtk.Application.Features.User
 
         public async Task<BaseResponse<bool>> EmailVerification(string email)
         {
-            var result = await _unitOfWork.Users.EmailVerification(email);
+            var result = await unitOfWork.Users.EmailVerification(email);
 
             if (!result.IsOk)
             {
@@ -105,7 +92,7 @@ namespace Rahtk.Application.Features.User
 
         public async Task<BaseResponse<bool>> ForgetPassword(ForgetPasswordModel forgetPassword)
         {
-            var result = await _unitOfWork.Users.ForgetPassword(forgetPassword);
+            var result = await unitOfWork.Users.ForgetPassword(forgetPassword);
             if (!result.IsOk)
             {
                 return new BaseResponse<bool>()
@@ -129,19 +116,19 @@ namespace Rahtk.Application.Features.User
 
         public async Task<BaseResponse<ICollection<NotificationModel>>> GetNotifications(string email)
         {
-            var result = await _unitOfWork.Users.GetNotifications(email);
+            var result = await unitOfWork.Users.GetNotifications(email);
             return new BaseResponse<ICollection<NotificationModel>> { StatusCode = 200, Success = true, Data = result.Select(e => e.ToModel()).ToList() };
         }
 
         public async Task<BaseResponse<ProfileEntity>> GetProfileInfo(string email)
         {
-            var result = await _unitOfWork.Users.GetProfileInfo(email);
+            var result = await unitOfWork.Users.GetProfileInfo(email);
             return new BaseResponse<ProfileEntity> { Data = result, StatusCode = 200, Success = true };
         }
 
         public async Task<BaseResponse<TokenModel>> Login(LoginDTO login)
         {
-            var validationResult = await _loginValidator.ValidateAsync(login);
+            var validationResult = await loginValidator.ValidateAsync(login);
             if (!validationResult.IsValid)
             {
                 return new BaseResponse<TokenModel>()
@@ -151,7 +138,7 @@ namespace Rahtk.Application.Features.User
                 };
             }
 
-            var result = await _unitOfWork.Users.Login(login);
+            var result = await unitOfWork.Users.Login(login);
 
             if (!result.IsOk)
             {
@@ -165,7 +152,7 @@ namespace Rahtk.Application.Features.User
             {
                 return new BaseResponse<TokenModel>()
                 {
-                    Message = _languageService.Getkey("user_logged_in_successfully").Value,
+                    Message = languageService.GetKey("user_logged_in_successfully").Value,
                     StatusCode = 200,
                     Success = true,
                     Data = result.Value,
@@ -175,19 +162,19 @@ namespace Rahtk.Application.Features.User
 
         public async Task<BaseResponse<bool>> Logout(string email)
         {
-            await _unitOfWork.Users.Logout(email);
+            await unitOfWork.Users.Logout(email);
             return new BaseResponse<bool>
             {
                 Data = true,
                 StatusCode = 200,
                 Success = true,
-                Message = _languageService.Getkey("logut_successfully").Value
+                Message = languageService.GetKey("logout_successfully").Value
             };
         }
 
         public async Task<BaseResponse<TokenModel>> RefreshToken(TokenModel token)
         {
-            var result = await _unitOfWork.Users.RefreshToken(token);
+            var result = await unitOfWork.Users.RefreshToken(token);
             if (!result.IsOk)
             {
                 return new BaseResponse<TokenModel>
@@ -201,19 +188,19 @@ namespace Rahtk.Application.Features.User
                 Data = result.Value,
                 StatusCode = 200,
                 Success = true,
-                Message = _languageService.Getkey("token_refreshed_successfully").Value,
+                Message = languageService.GetKey("token_refreshed_successfully").Value,
             };
         }
 
         public async Task<BaseResponse<bool>> RegisterFCM(string email, string token)
         {
-            await _unitOfWork.Users.RegisterFCM(email, token);
+            await unitOfWork.Users.RegisterFCM(email, token);
             return new BaseResponse<bool> { Data = true, StatusCode = 200};
         }
 
-        public async Task<BaseResponse<TokenModel>> SocailLogin(LoginDTO login)
+        public async Task<BaseResponse<TokenModel>> SocialLogin(LoginDTO login)
         {
-            var result = await _unitOfWork.Users.SocailLogin(login);
+            var result = await unitOfWork.Users.SocialLogin(login);
 
             if (!result.IsOk)
             {
@@ -227,7 +214,7 @@ namespace Rahtk.Application.Features.User
             {
                 return new BaseResponse<TokenModel>()
                 {
-                    Message = _languageService.Getkey("user_logged_in_successfully").Value,
+                    Message = languageService.GetKey("user_logged_in_successfully").Value,
                     StatusCode = 200,
                     Success = true,
                     Data = result.Value,
@@ -237,7 +224,7 @@ namespace Rahtk.Application.Features.User
 
         public async Task<BaseResponse<bool>> VerifyOTP(string otp, string email)
         {
-            var result = await _unitOfWork.Users.VerifyOTP(otp: otp, email: email);
+            var result = await unitOfWork.Users.VerifyOTP(otp: otp, email: email);
 
             if (!result.IsOk)
             {
@@ -260,4 +247,3 @@ namespace Rahtk.Application.Features.User
         }
     }
 }
-

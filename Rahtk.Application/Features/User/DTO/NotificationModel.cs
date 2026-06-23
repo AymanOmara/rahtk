@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Rahtk.Application.Features.User
+namespace Rahtk.Application.Features.User.DTO
 {
 	public class NotificationModel
 	{

@@ -10,19 +10,13 @@ namespace Rahtk.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PaymentController : ControllerBase
+    public class PaymentController(IPaymentService paymentService) : ControllerBase
     {
-        private readonly IPaymentService _paymentService;
-        public PaymentController(IPaymentService paymentService)
-        {
-            _paymentService = paymentService;
-        }
-
         [HttpPost("add-payment")]
         public async Task<IActionResult> AddPayment([FromBody] CreatePaymentOptionModel paymentOptionModel)
         {
             var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _paymentService.CreatePayment(paymentOptionModel, email);
+            var result = await paymentService.CreatePayment(paymentOptionModel, email);
             return result.ToResult();
         }
 
@@ -30,7 +24,7 @@ namespace Rahtk.Api.Controllers
         public async Task<IActionResult> GetPayments()
         {
             var email = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await _paymentService.GetPaymentOptions(email);
+            var result = await paymentService.GetPaymentOptions(email);
             return result.ToResult();
         }
     }

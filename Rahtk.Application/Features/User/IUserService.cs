@@ -1,8 +1,9 @@
 ﻿using Rahtk.Application.Features.User;
+using Rahtk.Application.Features.User.DTO;
 using Rahtk.Domain.Features.User;
 using Rahtk.Shared.Models;
 
-namespace Rahtk.Application.Features
+namespace Rahtk.Application.Features.User
 {
 	public interface IUserService
 	{
@@ -12,7 +13,7 @@ namespace Rahtk.Application.Features
 
         Task<BaseResponse<TokenModel>> RefreshToken(TokenModel token);
         
-        Task<BaseResponse<TokenModel>> SocailLogin(LoginDTO login);
+        Task<BaseResponse<TokenModel>> SocialLogin(LoginDTO login);
 
         Task<BaseResponse<bool>> EmailVerification(string email);
 

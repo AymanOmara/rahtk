@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
@@ -33,7 +33,7 @@
     <data name="user_created_success_fully" xml:space="preserve">
         <value>تم إنشاء المستخدم بنجاح</value>
     </data>
-    <data name="deposite_cannot_gratter_than_price" xml:space="preserve">
+    <data name="deposit_cannot_greater_than_price" xml:space="preserve">
         <value>الإيداع لا يمكن أن يكون أكبر من السعر</value>
     </data>
     <data name="event_not_found" xml:space="preserve">
@@ -57,7 +57,7 @@
     <data name="please_close_current_shift_first" xml:space="preserve">
         <value>يرجى إغلاق الوردية الحالية أولاً</value>
     </data>
-    <data name="the_table_alerdy_has_active_order" xml:space="preserve">
+    <data name="the_table_already_has_active_order" xml:space="preserve">
         <value>الطاولة تحتوي بالفعل على طلب نشط</value>
     </data>
     <data name="error_try_later" xml:space="preserve">
@@ -72,7 +72,7 @@
     <data name="your_email_verification_is" xml:space="preserve">
         <value>رمز التحقق الخاص بك هوا </value>
     </data>
-    <data name="verfification_email_sent" xml:space="preserve">
+    <data name="verification_email_sent" xml:space="preserve">
         <value>تم ارسال رمز التحقق علي البريد الالكتروني</value>
     </data>
     <data name="wrong_otp" xml:space="preserve">
@@ -105,7 +105,7 @@
     <data name="reminder_added_successfully" xml:space="preserve">
         <value>تمت إضافة التذكير بنجاح</value>
     </data>
-    <data name="logut_successfully" xml:space="preserve">
+    <data name="logout_successfully" xml:space="preserve">
         <value>تم تسجيل الخروج بنجاح</value>
     </data>
     <data name="reminder_added_successfully" xml:space="preserve">

@@ -1,10 +1,11 @@
-using Rahtk.Contracts.Features;
+﻿using Rahtk.Contracts.Features;
 using Rahtk.Contracts.Features.Address;
 using Rahtk.Contracts.Features.Order;
 using Rahtk.Contracts.Features.Payment;
-using Rahtk.Contracts.Features.Product.Prodcut;
+using Rahtk.Contracts.Features.Product.Product;
 using Rahtk.Contracts.Features.Reminder;
 using Rahtk.Contracts.Features.User;
+using Rahtk.Contracts.Features.Product.Category;
 
 namespace Rahtk.Contracts.Common
 {

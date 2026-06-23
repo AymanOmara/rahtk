@@ -1,18 +1,11 @@
-using FirebaseAdmin.Messaging;
+﻿using FirebaseAdmin.Messaging;
 using Microsoft.Extensions.Logging;
 using Rahtk.Contracts.Common;
 
 namespace Rahtk.Infrastructure.EF.Services
 {
-    public class NotificationSender : INotificationSender
+    public class NotificationSender(ILogger<NotificationSender> logger) : INotificationSender
     {
-        private readonly ILogger<NotificationSender> _logger;
-
-        public NotificationSender(ILogger<NotificationSender> logger)
-        {
-            _logger = logger;
-        }
-
         public async Task SendNotification(string deviceToken, string messageBody)
         {
             try
@@ -28,11 +21,11 @@ namespace Rahtk.Infrastructure.EF.Services
                 };
                 var messaging = FirebaseMessaging.DefaultInstance;
                 var result = await messaging.SendAsync(firebaseMessage);
-                _logger.LogInformation("Firebase notification sent successfully. MessageId: {MessageId}", result);
+                logger.LogInformation("Firebase notification sent successfully. MessageId: {MessageId}", result);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to send Firebase notification to device token: {Token}", deviceToken);
+                logger.LogError(ex, "Failed to send Firebase notification to device token: {Token}", deviceToken);
             }
         }
     }

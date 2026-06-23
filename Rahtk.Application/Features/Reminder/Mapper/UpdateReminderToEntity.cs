@@ -1,6 +1,5 @@
 ﻿using Rahtk.Application.Features.Product.mappers;
 using Rahtk.Application.Features.Reminder.DTO;
-using Rahtk.Application.Features.Reminder.mappers;
 using Rahtk.Domain.Features.Reminder;
 
 namespace Rahtk.Application.Features.Reminder.Mapper

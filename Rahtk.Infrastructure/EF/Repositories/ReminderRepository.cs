@@ -1,4 +1,4 @@
-using Hangfire;
+﻿using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Common;
@@ -9,24 +9,17 @@ using Rahtk.Infrastructure.EF.Contexts;
 
 namespace Rahtk.Infrastructure.EF.Repositories
 {
-    public class ReminderRepository : IReminderRepository
+    public class ReminderRepository(
+        RahtkContext context,
+        IRecurringJobManager recurringJobManager,
+        INotificationSender notificatioSender,
+        UserManager<RahtkUser> userManager
+        ) : IReminderRepository
     {
-        private readonly RahtkContext _context;
-        private readonly IRecurringJobManager _recurringJobManager;
-        private readonly INotificationSender _notificatioSender;
-        public readonly UserManager<RahtkUser> _userManager;
-        public ReminderRepository(
-            RahtkContext context,
-            IRecurringJobManager recurringJobManager,
-            INotificationSender notificatioSender,
-            UserManager<RahtkUser> userManager
-            )
-        {
-            _context = context;
-            _recurringJobManager = recurringJobManager;
-            _notificatioSender = notificatioSender;
-            _userManager = userManager;
-        }
+        private readonly RahtkContext _context = context;
+        private readonly IRecurringJobManager _recurringJobManager = recurringJobManager;
+        private readonly INotificationSender _notificatioSender = notificatioSender;
+        public readonly UserManager<RahtkUser> _userManager = userManager;
 
         public async Task DeleteReminder(ReminderEntity reminder, string userEmail)
         {
