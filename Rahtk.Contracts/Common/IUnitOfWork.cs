@@ -44,5 +44,7 @@ namespace Rahtk.Contracts.Common
         }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+
+        void RegisterPostCommitAction(Func<Task> action);
     }
 }

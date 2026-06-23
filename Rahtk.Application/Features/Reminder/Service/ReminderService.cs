@@ -13,8 +13,12 @@ namespace Rahtk.Application.Features.Reminder.Service
         public async Task<BaseResponse<ReadReminderModel>> AddReminder(AddReminderModel reminderModel, string email)
         {
             var result = await unitOfWork.Reminder.AddReminder(reminderModel.ToEntity(),email);
+            unitOfWork.RegisterPostCommitAction(() =>
+            {
+                unitOfWork.Reminder.ScheduleReminder(result);
+                return Task.CompletedTask;
+            });
             await unitOfWork.SaveChangesAsync();
-            unitOfWork.Reminder.ScheduleReminder(result);
             return new BaseResponse<ReadReminderModel>
             {
                 Data = result.ToModel(),
@@ -28,8 +32,12 @@ namespace Rahtk.Application.Features.Reminder.Service
         public async Task<BaseResponse<ReadReminderModel>> UpdateReminder(UpdateReminderModel reminderModel, string email)
         {
             var result = await unitOfWork.Reminder.UpdateReminder(reminderModel.ToEntity(),email);
+            unitOfWork.RegisterPostCommitAction(() =>
+            {
+                unitOfWork.Reminder.ScheduleReminder(result);
+                return Task.CompletedTask;
+            });
             await unitOfWork.SaveChangesAsync();
-            unitOfWork.Reminder.ScheduleReminder(result);
             return new BaseResponse<ReadReminderModel>
             {
                 Data = result.ToModel(),

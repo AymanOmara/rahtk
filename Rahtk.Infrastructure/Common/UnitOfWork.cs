@@ -30,9 +30,22 @@ namespace Rahtk.Infrastructure.Common
         public IOrderRepository Order { get; } = order;
         public IReminderRepository Reminder { get; } = reminder;
 
+        private readonly List<Func<Task>> _postCommitActions = new();
+
+        public void RegisterPostCommitAction(Func<Task> action)
+        {
+            _postCommitActions.Add(action);
+        }
+
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            return await context.SaveChangesAsync(cancellationToken);
+            var result = await context.SaveChangesAsync(cancellationToken);
+            foreach (var action in _postCommitActions)
+            {
+                await action();
+            }
+            _postCommitActions.Clear();
+            return result;
         }
     }
 }

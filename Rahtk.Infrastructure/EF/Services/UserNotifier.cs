@@ -22,7 +22,9 @@ namespace Rahtk.Infrastructure.EF.Services
             using (var smtpClient = new SmtpClient())
             {
                 smtpClient.CheckCertificateRevocation = false;
-                await smtpClient.ConnectAsync("smtp.gmail.com", 587, false);
+                var host = configuration["Email:Host"] ?? "smtp.gmail.com";
+                var port = int.TryParse(configuration["Email:Port"], out var p) ? p : 587;
+                await smtpClient.ConnectAsync(host, port, false);
                 await smtpClient.AuthenticateAsync(configuration["Email:Email"], configuration["Email:Password"]);
                 await smtpClient.SendAsync(mailMessage);
                 await smtpClient.DisconnectAsync(true);
