@@ -3,11 +3,11 @@
 namespace Rahtk.Domain.Features.User
 {
     public record RegistrationDTO(
-        [property: Required] string Email,
-        [property: Required] string Password,
-        [property: Required] string FirstName,
-        [property: Required] string LastName,
-        [property: Required] string PhoneNumber
+        [Required] string Email,
+        [Required] string Password,
+        [Required] string FirstName,
+        [Required] string LastName,
+        [Required] string PhoneNumber
     );
 }
 
