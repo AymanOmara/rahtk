@@ -1,11 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using Rahtk.Contracts.Common;
 using Rahtk.Contracts.Features.User;
 using Rahtk.Domain.Features.User;
@@ -22,28 +19,26 @@ namespace Rahtk.Infrastructure.EF.Repositories
         LanguageService localization,
         IUserNotifier userNotifier,
         ITokenService tokenService
-        ) : IUserRepository
+    ) : IUserRepository
     {
-        private readonly RahtkContext _context = context;
-        public readonly UserManager<RahtkUser> _userManager = userManager;
-        public readonly SignInManager<RahtkUser> _signInManager = signInManager;
-        private readonly LanguageService _localization = localization;
-        private readonly IUserNotifier _userNotifier = userNotifier;
-        private readonly ITokenService _tokenService = tokenService;
         public async Task<ProfileEntity> GetProfileInfo(string email)
         {
-
-            var user = await _userManager.FindByEmailAsync(email);
-            return new ProfileEntity { Email = user.Email, UserName = user.FirstName + user.LastName, PhoneNumber = user.PhoneNumber };
+            var user = await userManager.FindByEmailAsync(email);
+            return new ProfileEntity
+            {
+                Email = user.Email, UserName = user.FirstName + user.LastName,
+                PhoneNumber = user.PhoneNumber,
+            };
         }
+
         public async Task<Result<string, Exception>> CreateUser(RegistrationDTO registration)
         {
             var isUserExict = await IsUserExist(registration.Email);
             if (isUserExict)
             {
-                return new Exception(_localization.GetKey("user_already_exists").Value);
-
+                return new Exception(localization.GetKey("user_already_exists").Value);
             }
+
             RahtkUser user = new()
             {
                 Email = registration.Email,
@@ -54,39 +49,41 @@ namespace Rahtk.Infrastructure.EF.Repositories
                 PhoneNumber = registration.PhoneNumber,
             };
 
-            var result = await _userManager.CreateAsync(user, registration.Password);
+            var result = await userManager.CreateAsync(user, registration.Password);
 
             if (!result.Succeeded)
             {
                 return new Exception(string.Join(",", result.Errors.ToList()));
             }
 
-            return _localization.GetKey("user_created_success_fully").Value;
+            return localization.GetKey("user_created_success_fully").Value;
         }
 
         public async Task<bool> IsUserExist(string email)
         {
-            var isEmailExist = await _userManager.FindByEmailAsync(email);
+            var isEmailExist = await userManager.FindByEmailAsync(email);
             return isEmailExist != null;
         }
 
         public async Task<Result<TokenModel, Exception>> Login(LoginDTO d)
         {
-            var user = await _userManager.FindByEmailAsync(d.Email);
+            var user = await userManager.FindByEmailAsync(d.Email);
             if (user == null)
             {
-                return new Exception(_localization.GetKey("invalid_user_name").Value);
+                return new Exception(localization.GetKey("invalid_user_name").Value);
             }
-            var result = await _userManager.CheckPasswordAsync(user, d.Password);
+
+            var result = await userManager.CheckPasswordAsync(user, d.Password);
             if (!result)
             {
-                return new Exception(_localization.GetKey("invalid_password").Value);
+                return new Exception(localization.GetKey("invalid_password").Value);
             }
-            var token = await _tokenService.CreateJwtToken(user);
+
+            var token = await tokenService.CreateJwtToken(user);
             user.RefreshToken = token.RefreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             user.FcmToken = d.FcmToken;
-            await _userManager.UpdateAsync(user);
+            await userManager.UpdateAsync(user);
             return token;
         }
 
@@ -99,10 +96,9 @@ namespace Rahtk.Infrastructure.EF.Repositories
         }
 
 
-
         public async Task<Result<TokenModel, Exception>> SocialLogin(LoginDTO login)
         {
-            var user = await _userManager.FindByEmailAsync(login.Email);
+            var user = await userManager.FindByEmailAsync(login.Email);
             if (user == null)
             {
                 RahtkUser rahtkUser = new()
@@ -111,113 +107,123 @@ namespace Rahtk.Infrastructure.EF.Repositories
                     UserName = login.Email,
                     EmailConfirmed = true,
                 };
-                var userCreationResult = await _userManager.CreateAsync(rahtkUser);
+                var userCreationResult = await userManager.CreateAsync(rahtkUser);
                 if (!userCreationResult.Succeeded)
                 {
-                    return new Exception(_localization.GetKey("error_try_again_later").Value);
+                    return new Exception(localization.GetKey("error_try_again_later").Value);
                 }
+
                 user = rahtkUser;
             }
-            var token = await _tokenService.CreateJwtToken(user);
+
+            var token = await tokenService.CreateJwtToken(user);
             user.RefreshToken = token.RefreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-            await _userManager.UpdateAsync(user);
+            await userManager.UpdateAsync(user);
             return token;
         }
 
         public async Task<Result<string, Exception>> EmailVerification(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(email);
             var isUserExist = user != null;
             if (!isUserExist)
             {
-                return new Exception(_localization.GetKey("email_not_exists").Value);
+                return new Exception(localization.GetKey("email_not_exists").Value);
             }
+
             Random random = new Random();
             int randomNumber = random.Next(1000, 10000);
             user.VerificationToken = randomNumber.ToString();
-            await _userManager.UpdateAsync(user);
+            await userManager.UpdateAsync(user);
 
-            await _userNotifier.Notify(email, $"{_localization.GetKey("your_email_verification_is").Value} {randomNumber}");
-            return _localization.GetKey("verification_email_sent").Value;
+            await userNotifier.Notify(email,
+                $"{localization.GetKey("your_email_verification_is").Value} {randomNumber}");
+            return localization.GetKey("verification_email_sent").Value;
         }
 
         public async Task<Result<string, Exception>> VerifyOTP(string otp, string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(email);
             var isUserExist = user != null;
             if (!isUserExist)
             {
-                return new Exception(_localization.GetKey("email_not_exists").Value);
+                return new Exception(localization.GetKey("email_not_exists").Value);
             }
+
             if (otp != user.VerificationToken)
             {
-                return new Exception(_localization.GetKey("wrong_otp").Value);
+                return new Exception(localization.GetKey("wrong_otp").Value);
             }
-            return _localization.GetKey("correct_otp").Value;
+
+            return localization.GetKey("correct_otp").Value;
         }
 
         public async Task<Result<string, Exception>> ForgetPassword(ForgetPasswordModel forgetPassword)
         {
-            var user = await _userManager.FindByEmailAsync(forgetPassword.Email);
+            var user = await userManager.FindByEmailAsync(forgetPassword.Email);
             var isUserExist = user != null;
             if (!isUserExist)
             {
-                return new Exception(_localization.GetKey("email_not_exists").Value);
+                return new Exception(localization.GetKey("email_not_exists").Value);
             }
 
             if (user.VerificationToken != forgetPassword.OTP)
             {
-                return new Exception(_localization.GetKey("wrong_otp").Value);
+                return new Exception(localization.GetKey("wrong_otp").Value);
             }
-            await _userManager.RemovePasswordAsync(user);
-            await _userManager.AddPasswordAsync(user, forgetPassword.Password);
-            await _userManager.UpdateAsync(user);
-            return _localization.GetKey("password_changed_successfully").Value;
+
+            await userManager.RemovePasswordAsync(user);
+            await userManager.AddPasswordAsync(user, forgetPassword.Password);
+            await userManager.UpdateAsync(user);
+            return localization.GetKey("password_changed_successfully").Value;
         }
 
-        public async Task<Result<string, Exception>> ChangePassword(string newPassword, string currentPassword, string email)
+        public async Task<Result<string, Exception>> ChangePassword(string newPassword, string currentPassword,
+            string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(email);
             try
             {
-                await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+                await userManager.ChangePasswordAsync(user, currentPassword, newPassword);
             }
             catch (Exception)
             {
-                return new Exception(_localization.GetKey("error_change_password").Value);
+                return new Exception(localization.GetKey("error_change_password").Value);
             }
-            return _localization.GetKey("password_changed_successfully").Value;
+
+            return localization.GetKey("password_changed_successfully").Value;
         }
 
         public async Task<Result<TokenModel, Exception>> RefreshToken(TokenModel oldToken)
         {
             try
             {
-                var principal = _tokenService.GetPrincipalFromExpiredToken(oldToken.AccessToken);
-                var email = principal.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value 
-                            ?? principal.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email)?.Value;
+                var principal = tokenService.GetPrincipalFromExpiredToken(oldToken.AccessToken);
+                var email = principal.FindFirst(ClaimTypes.Email)?.Value
+                            ?? principal.FindFirst(JwtRegisteredClaimNames.Email)
+                                ?.Value;
 
                 if (string.IsNullOrEmpty(email))
                 {
-                    return new Exception(_localization.GetKey("user_not_found").Value);
+                    return new Exception(localization.GetKey("user_not_found").Value);
                 }
 
-                var user = await _userManager.FindByEmailAsync(email);
+                var user = await userManager.FindByEmailAsync(email);
                 if (user == null)
                 {
-                    return new Exception(_localization.GetKey("user_not_found").Value);
+                    return new Exception(localization.GetKey("user_not_found").Value);
                 }
 
                 if (user.RefreshToken != oldToken.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
                 {
-                    return new Exception(_localization.GetKey("invalid_token").Value);
+                    return new Exception(localization.GetKey("invalid_token").Value);
                 }
 
-                var token = await _tokenService.CreateJwtToken(user);
+                var token = await tokenService.CreateJwtToken(user);
                 user.RefreshToken = token.RefreshToken;
                 user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-                await _userManager.UpdateAsync(user);
+                await userManager.UpdateAsync(user);
                 return token;
             }
             catch (Exception ex)
@@ -228,26 +234,26 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
         public async Task<ICollection<NotificationEntity>> GetNotifications(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(email);
 
-            var result = await _context.Notifications.Where(n => n.UserId == user.Id).ToListAsync();
+            var result = await context.Notifications.Where(n => n.UserId == user.Id).ToListAsync();
 
             return result;
         }
 
         public async Task Logout(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(email);
             user.FcmToken = "";
-            await _userManager.UpdateAsync(user);
-            await _signInManager.SignOutAsync();
+            await userManager.UpdateAsync(user);
+            await signInManager.SignOutAsync();
         }
 
         public async Task RegisterFCM(string email, string fcmToken)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await userManager.FindByEmailAsync(email);
             user.FcmToken = fcmToken;
-            await _userManager.UpdateAsync(user);
+            await userManager.UpdateAsync(user);
         }
     }
 }
