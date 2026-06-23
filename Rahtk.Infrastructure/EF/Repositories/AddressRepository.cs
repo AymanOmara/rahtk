@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Features.Address;
 using Rahtk.Domain.Features.User;
@@ -19,7 +19,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
         public async Task<ICollection<AddressEntity>> GetAddresses(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            var result = await _context.Addresses.Where(add => add.RahtkUserId == user.Id).ToListAsync();
+            var result = await _context.Addresses.AsNoTracking().Where(add => add.RahtkUserId == user.Id).ToListAsync();
             return result;
         }
 
@@ -28,7 +28,6 @@ namespace Rahtk.Infrastructure.EF.Repositories
             var user = await _userManager.FindByEmailAsync(email);
             address.RahtkUserId = user.Id;
             await _context.Addresses.AddAsync(address);
-            await _context.SaveChangesAsync();
             return address;
         }
     }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Features.Payment;
 using Rahtk.Domain.Features.User;
@@ -19,7 +19,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
         public async Task<ICollection<PaymentOptionEntity>> GetPaymentOptions(string userEmail)
         {
             var user = await _userManager.FindByEmailAsync(userEmail);
-            var result = await _context.PaymentOptions.Where(add => add.RahtkUserId == user.Id).ToListAsync();
+            var result = await _context.PaymentOptions.AsNoTracking().Where(add => add.RahtkUserId == user.Id).ToListAsync();
             return result;
         }
 
@@ -28,7 +28,6 @@ namespace Rahtk.Infrastructure.EF.Repositories
             var user = await _userManager.FindByEmailAsync(userEmail);
             paymentOption.RahtkUserId = user.Id;
             await _context.PaymentOptions.AddAsync(paymentOption);
-            await _context.SaveChangesAsync();
             return paymentOption;
         }
     }

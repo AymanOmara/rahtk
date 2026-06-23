@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rahtk.Api.Utils;
-using Rahtk.Application.Features.category;
+using Rahtk.Application.Features.Category;
 
 namespace Rahtk.Api.Controllers
 {

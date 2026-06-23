@@ -1,4 +1,4 @@
-﻿using Rahtk.Application.Features.Address.DTO;
+using Rahtk.Application.Features.Address.DTO;
 using Rahtk.Contracts.Common;
 using Rahtk.Domain.Features.User;
 using Rahtk.Shared.Localization;
@@ -20,12 +20,13 @@ namespace Rahtk.Application.Features.Address.Service
         public async Task<BaseResponse<AddressEntity>> CreateAddress(CreateAddressModel model, string userEmail)
         {
             var result = await _unitOfWork.Address.Create(model.ToEntity(),userEmail);
-            return new BaseResponse<AddressEntity> { data = result, message = _languageService.Getkey("address_created_successfully").Value, statusCode = 200 , success = true};
+            await _unitOfWork.SaveChangesAsync();
+            return new BaseResponse<AddressEntity> { Data = result, Message = _languageService.Getkey("address_created_successfully").Value, StatusCode = 200 , Success = true};
         }
         public async Task<BaseResponse<ICollection<AddressEntity>>> GetAddresses( string userEmail)
         {
             var result = await _unitOfWork.Address.GetAddresses(userEmail);
-            return new BaseResponse<ICollection<AddressEntity>> { data = result, message = "", statusCode = 200, success = true };
+            return new BaseResponse<ICollection<AddressEntity>> { Data = result, Message = "", StatusCode = 200, Success = true };
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Rahtk.Application.Features.product.DTO;
+﻿using Rahtk.Application.Features.Product.DTO;
 using Rahtk.Application.Features.Reminder.DTO;
 using Rahtk.Shared.Models;
 

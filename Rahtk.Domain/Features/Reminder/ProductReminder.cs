@@ -1,4 +1,4 @@
-﻿using Rahtk.Domain.Features.Products;
+﻿using Rahtk.Domain.Features.Product;
 
 namespace Rahtk.Domain.Features.Reminder
 {

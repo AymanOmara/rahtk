@@ -1,4 +1,4 @@
-﻿using Hangfire;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Common;
@@ -32,15 +32,13 @@ namespace Rahtk.Infrastructure.EF.Repositories
         {
             _recurringJobManager.RemoveIfExists(reminder.Id.ToString());
             _context.Entry(reminder).State = EntityState.Deleted;
-            await _context.SaveChangesAsync();
-
         }
 
         public async Task<ICollection<ReminderEntity>> GetAllReminders(string userEmail)
         {
             var user = await _userManager.FindByEmailAsync(userEmail);
 
-            var reminders = await _context.Reminders.Include(pr => pr.Products).ThenInclude(pr=> pr.Product).Where(re => re.UserId == user.Id).ToListAsync();
+            var reminders = await _context.Reminders.AsNoTracking().Include(pr => pr.Products).ThenInclude(pr=> pr.Product).Where(re => re.UserId == user.Id).ToListAsync();
             return reminders;
         }
 
@@ -95,8 +93,6 @@ namespace Rahtk.Infrastructure.EF.Repositories
                 _context.Entry(productReminder).State = EntityState.Added;
             }
             _context.Entry(reminder).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            ScheduleReminder(reminder);
             return reminder;
         }
 
@@ -115,8 +111,6 @@ namespace Rahtk.Infrastructure.EF.Repositories
             }
 
             await _context.Reminders.AddAsync(reminder);
-            await _context.SaveChangesAsync();
-            ScheduleReminder(reminder);
             return reminder;
         }
     }

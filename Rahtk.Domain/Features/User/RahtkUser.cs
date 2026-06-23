@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Rahtk.Domain.Features.Products;
+using Microsoft.AspNetCore.Identity;
+using Rahtk.Domain.Features.Product;
 using Rahtk.Domain.Features.Reminder;
 
 namespace Rahtk.Domain.Features.User
@@ -7,6 +7,8 @@ namespace Rahtk.Domain.Features.User
 	public class RahtkUser : IdentityUser
     {
         public string RefreshToken { get; set; } = string.Empty;
+
+        public DateTime RefreshTokenExpiryTime { get; set; }
 
         public string FcmToken { get; set; } = string.Empty;
 

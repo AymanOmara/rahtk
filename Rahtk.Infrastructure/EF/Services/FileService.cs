@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Rahtk.Contracts.Common;
 
@@ -23,7 +23,7 @@ namespace Rahtk.Infrastructure.EF.Services
             string path = $"/images/{uniqueFileName}";
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                file.CopyTo(fileStream);
+                await file.CopyToAsync(fileStream);
             }
 
             return path;

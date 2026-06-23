@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -23,6 +23,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
         private readonly LanguageService _localization;
         private readonly IConfiguration _configuration;
         private readonly IUserNotifier _userNotifier;
+        private readonly ITokenService _tokenService;
 
         public UserRepository(
             RahtkContext context,
@@ -30,7 +31,8 @@ namespace Rahtk.Infrastructure.EF.Repositories
             SignInManager<RahtkUser> signInManager,
             LanguageService localization,
             IConfiguration configuration,
-            IUserNotifier userNotifier
+            IUserNotifier userNotifier,
+            ITokenService tokenService
             )
         {
             _context = context;
@@ -39,6 +41,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
             _localization = localization;
             _configuration = configuration;
             _userNotifier = userNotifier;
+            _tokenService = tokenService;
 
         }
         public async Task<ProfileEntity> GetProfileInfo(string email)
@@ -93,8 +96,9 @@ namespace Rahtk.Infrastructure.EF.Repositories
             {
                 return new Exception(_localization.Getkey("invalid_password").Value);
             }
-            var token = await CreateJwtToken(user);
+            var token = await _tokenService.CreateJwtToken(user);
             user.RefreshToken = token.RefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             user.FcmToken = d.FcmToken;
             await _userManager.UpdateAsync(user);
             return token;
@@ -108,34 +112,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
             return Convert.ToBase64String(randomNumber);
         }
 
-        private async Task<TokenModel> CreateJwtToken(RahtkUser user)
-        {
-            var roles = await _userManager.GetRolesAsync(user);
 
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? ""));
-            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
-            var tokenDes = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim(JwtRegisteredClaimNames.Sub, user.UserName ?? ""),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
-                    new Claim(JwtRegisteredClaimNames.Iss, _configuration["Jwt:Issuer"].ToString()),
-                    new Claim(JwtRegisteredClaimNames.Aud, _configuration["Jwt:Audience"].ToString()),
-                    new Claim("uid", user.Id),
-                }),
-                Expires = DateTime.UtcNow.AddHours(12),
-                SigningCredentials = signingCredentials
-            };
-
-            tokenDes.Subject.AddClaims(roles.Select(role => new Claim(ClaimsIdentity.DefaultRoleClaimType, role)));
-            var token = jwtTokenHandler.CreateToken(tokenDes);
-            var jwtToken = jwtTokenHandler.WriteToken(token);
-            return new TokenModel() { AccessToken = jwtToken, RefreshToken = RefreshTokenGeneration() };
-        }
 
         public async Task<Result<TokenModel, Exception>> SocailLogin(LoginDTO login)
         {
@@ -157,8 +134,9 @@ namespace Rahtk.Infrastructure.EF.Repositories
                 }
                 user = rahtkUser;
             }
-            var token = await CreateJwtToken(user);
+            var token = await _tokenService.CreateJwtToken(user);
             user.RefreshToken = token.RefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
             await _userManager.UpdateAsync(user);
             return token;
         }
@@ -230,16 +208,38 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
         public async Task<Result<TokenModel, Exception>> RefreshToken(TokenModel oldToken)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(us => us.RefreshToken == oldToken.RefreshToken);
-
-            if (user == null || user.RefreshToken != oldToken.RefreshToken)
+            try
             {
-                return new Exception(_localization.Getkey("user_not_found").Value);
+                var principal = _tokenService.GetPrincipalFromExpiredToken(oldToken.AccessToken);
+                var email = principal.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value 
+                            ?? principal.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Email)?.Value;
+
+                if (string.IsNullOrEmpty(email))
+                {
+                    return new Exception(_localization.Getkey("user_not_found").Value);
+                }
+
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    return new Exception(_localization.Getkey("user_not_found").Value);
+                }
+
+                if (user.RefreshToken != oldToken.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+                {
+                    return new Exception(_localization.Getkey("invalid_token").Value);
+                }
+
+                var token = await _tokenService.CreateJwtToken(user);
+                user.RefreshToken = token.RefreshToken;
+                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+                await _userManager.UpdateAsync(user);
+                return token;
             }
-            var token = await CreateJwtToken(user);
-            user.RefreshToken = token.RefreshToken;
-            await _userManager.UpdateAsync(user);
-            return token;
+            catch (Exception ex)
+            {
+                return ex;
+            }
         }
 
         public async Task<ICollection<NotificationEntity>> GetNotifications(string email)

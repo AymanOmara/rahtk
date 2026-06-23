@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Rahtk.Domain.Features.Products;
+using Rahtk.Domain.Features.Product;
 using Rahtk.Domain.Features.User;
 
 namespace Rahtk.Domain.Features.Reminder

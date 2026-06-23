@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Rahtk.Shared.Exceptions;
 using Rahtk.Shared.Services;
@@ -9,12 +9,12 @@ namespace Rahtk.Shared
     {
         public static void AddShared(this IServiceCollection services)
         {
-            //services.AddScoped<ExceptionMiddleware>();
+            services.AddScoped<ExceptionMiddleware>();
             services.RegisterLocalizationService();
         }
         public static IApplicationBuilder UseShared(this IApplicationBuilder app)
         {
-            //app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             return app;
         }

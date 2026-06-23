@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rahtk.Api.Utils;
-using Rahtk.Application.Features.product;
-using Rahtk.Application.Features.product.DTO;
+using Rahtk.Application.Features.Product;
+using Rahtk.Application.Features.Product.DTO;
 
 namespace Rahtk.Api.Controllers
 {

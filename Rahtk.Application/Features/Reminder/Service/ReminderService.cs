@@ -1,4 +1,4 @@
-﻿using Rahtk.Application.Features.product.DTO;
+using Rahtk.Application.Features.Product.DTO;
 using Rahtk.Application.Features.Reminder.DTO;
 using Rahtk.Application.Features.Reminder.Mapper;
 using Rahtk.Contracts.Common;
@@ -19,12 +19,14 @@ namespace Rahtk.Application.Features.Reminder.Service
         public async Task<BaseResponse<ReadReminderModel>> AddReminder(AddReminderModel reminderModel, string email)
         {
             var result = await _unitofWork.Reminder.AddReminder(reminderModel.ToEntity(),email);
+            await _unitofWork.SaveChangesAsync();
+            _unitofWork.Reminder.ScheduleReminder(result);
             return new BaseResponse<ReadReminderModel>
             {
-                data = result.ToModel(),
-                statusCode = 200,
-                success = true,
-                message = _languageService.Getkey("reminder_added_successfully").Value
+                Data = result.ToModel(),
+                StatusCode = 200,
+                Success = true,
+                Message = _languageService.Getkey("reminder_added_successfully").Value
             };
 
         }
@@ -32,24 +34,27 @@ namespace Rahtk.Application.Features.Reminder.Service
         public async Task<BaseResponse<ReadReminderModel>> UpdateReminder(UpdateReminderModel reminderModel, string email)
         {
             var result = await _unitofWork.Reminder.UpdateReminder(reminderModel.ToEntity(),email);
+            await _unitofWork.SaveChangesAsync();
+            _unitofWork.Reminder.ScheduleReminder(result);
             return new BaseResponse<ReadReminderModel>
             {
-                data = result.ToModel(),
-                statusCode = 200,
-                success = true,
-                message = _languageService.Getkey("reminder_updated_successfully").Value,
+                Data = result.ToModel(),
+                StatusCode = 200,
+                Success = true,
+                Message = _languageService.Getkey("reminder_updated_successfully").Value,
             };
         }
 
         public async Task<BaseResponse<bool>> DeleteReminder(UpdateReminderModel reminderModel, string email)
         {
             await _unitofWork.Reminder.DeleteReminder(reminderModel.ToEntity(), email);
+            await _unitofWork.SaveChangesAsync();
             return new BaseResponse<bool>
             {
-                data = true,
-                statusCode = 200,
-                success = true,
-                message = _languageService.Getkey("reminder_deleted_successfully").Value
+                Data = true,
+                StatusCode = 200,
+                Success = true,
+                Message = _languageService.Getkey("reminder_deleted_successfully").Value
             };
         }
 
@@ -59,9 +64,9 @@ namespace Rahtk.Application.Features.Reminder.Service
 
             return new BaseResponse<ICollection<ReadReminderModel>>
             {
-                data = result.Select(re => re.ToModel()).ToList(),
-                statusCode = 200,
-                success = true,
+                Data = result.Select(re => re.ToModel()).ToList(),
+                StatusCode = 200,
+                Success = true,
             };
         }
 

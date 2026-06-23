@@ -1,4 +1,4 @@
-﻿using MailKit.Net.Smtp;
+using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 using Rahtk.Contracts.Common;
@@ -31,11 +31,10 @@ namespace Rahtk.Infrastructure.EF.Services
             using (var smtpClient = new SmtpClient())
             {
                 smtpClient.CheckCertificateRevocation = false;
-                smtpClient.Connect("smtp.gmail.com", 587, false);
-                smtpClient.Authenticate(_configuration["Email:Email"], _configuration["Email:Password"]);
-                smtpClient.Send(mailMessage);
-                smtpClient.Disconnect(true);
-                
+                await smtpClient.ConnectAsync("smtp.gmail.com", 587, false);
+                await smtpClient.AuthenticateAsync(_configuration["Email:Email"], _configuration["Email:Password"]);
+                await smtpClient.SendAsync(mailMessage);
+                await smtpClient.DisconnectAsync(true);
             }
         }
     }

@@ -10,7 +10,7 @@ namespace Rahtk.Api.Utils
         {
             return new ObjectResult(response)
             {
-                StatusCode = response.statusCode
+                StatusCode = response.StatusCode
             };
         }
     }

@@ -1,0 +1,29 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace Rahtk.Infrastructure.EF.Migrations
+{
+    /// <inheritdoc />
+    public partial class AddEmailVerificationToUser : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: "VerificationToken",
+                table: "AspNetUsers",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "VerificationToken",
+                table: "AspNetUsers");
+        }
+    }
+}

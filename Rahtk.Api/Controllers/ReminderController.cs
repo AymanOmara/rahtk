@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Rahtk.Api.Utils;
-using Rahtk.Application.Features.product.DTO;
+using Rahtk.Application.Features.Product.DTO;
 using Rahtk.Application.Features.Reminder.DTO;
 using Rahtk.Application.Features.Reminder.Service;
 

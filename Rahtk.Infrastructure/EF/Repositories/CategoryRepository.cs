@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Common;
@@ -44,8 +44,6 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
             await _context.Categories.AddAsync(category);
 
-            await _context.SaveChangesAsync();
-
             return category;
         }
 
@@ -54,7 +52,6 @@ namespace Rahtk.Infrastructure.EF.Repositories
             var category = await _context.Categories.FindAsync(CategoryId);
             category.Deleted = true;
             _context.Entry(category).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
             return true;
         }
 
@@ -62,11 +59,13 @@ namespace Rahtk.Infrastructure.EF.Repositories
         {
             var categories = await _context
                 .Categories
+                .AsNoTracking()
                 .Where(cat => !cat.Deleted)
                 .Include(cat => cat.Products)
                 .ToListAsync();
             var user = await _userManager.FindByEmailAsync(email);
             var favoriteProductIds = await _context.FavoriteProductUser
+                .AsNoTracking()
                 .Where(fpu => fpu.UserId == user.Id)
                 .Select(fpu => fpu.ProductId)
                 .ToListAsync();

@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Contracts.Common;
-using Rahtk.Contracts.Features.products.Prodcut;
-using Rahtk.Domain.Features.Products;
+using Rahtk.Contracts.Features.Product.Prodcut;
+using Rahtk.Domain.Features.Product;
 using Rahtk.Domain.Features.User;
 using Rahtk.Infrastructure.EF.Contexts;
 
@@ -28,7 +28,7 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
         public async Task<ICollection<ProductEntity>> GetAllProducts()
         {
-            var products = await _context.Products.Where(pr=>!pr.Deleted).ToListAsync();
+            var products = await _context.Products.AsNoTracking().Where(pr=>!pr.Deleted).ToListAsync();
 
             return products;
         }
@@ -41,8 +41,6 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
             await _context.Products.AddAsync(product);
 
-            await _context.SaveChangesAsync();
-
             return product;
         }
 
@@ -54,7 +52,6 @@ namespace Rahtk.Infrastructure.EF.Repositories
 
             product.FavoriteProductUsers.Add(new FavoriteProductUser() { UserId = user.Id, ProductId = productId });
             _context.Entry(product).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
             product.IsFavorite = true;
             return product;
         }
@@ -64,7 +61,6 @@ namespace Rahtk.Infrastructure.EF.Repositories
             var user = await _userManager.FindByEmailAsync(email);
             var favorite = await _context.FavoriteProductUser.Include(p => p.Product).ThenInclude(cat=>cat.Category).Include(p => p.User).FirstOrDefaultAsync(prod => prod.UserId == user.Id && prod.ProductId == productId);
             _context.Entry(favorite).State = EntityState.Deleted;
-            await _context.SaveChangesAsync();
             favorite.Product.IsFavorite = false;
             return favorite?.Product;
         }
@@ -73,16 +69,22 @@ namespace Rahtk.Infrastructure.EF.Repositories
         {
             var user = await _userManager.FindByEmailAsync(email);
             var favoriteProductIds = await _context.FavoriteProductUser
-            .Where(fpu => fpu.UserId == user.Id)
-            .Select(fpu => fpu.ProductId)
-            .ToListAsync();
-            var products = await _context.Products.ToListAsync();
+                .AsNoTracking()
+                .Where(fpu => fpu.UserId == user.Id)
+                .Select(fpu => fpu.ProductId)
+                .ToListAsync();
+
+            var products = await _context.Products
+                .AsNoTracking()
+                .Where(p => favoriteProductIds.Contains(p.Id) && !p.Deleted)
+                .ToListAsync();
+
             foreach (var product in products)
             {
-                product.IsFavorite = favoriteProductIds.Contains(product.Id);
+                product.IsFavorite = true;
             }
 
-            return products.Where(pro => pro.IsFavorite).ToList();
+            return products;
         }
 
         public async Task<ProductEntity> GetProductDetails(string email, int productId)
@@ -90,12 +92,13 @@ namespace Rahtk.Infrastructure.EF.Repositories
             var user = await _userManager.FindByEmailAsync(email);
 
             var favoriteProductIds = await _context.FavoriteProductUser
-            .Where(fpu => fpu.UserId == user.Id)
-            .Select(fpu => fpu.ProductId)
-            .ToListAsync();
+                .AsNoTracking()
+                .Where(fpu => fpu.UserId == user.Id)
+                .Select(fpu => fpu.ProductId)
+                .ToListAsync();
 
-            var product = await _context.Products.Include(pro=> pro.Category).FirstOrDefaultAsync(prod => productId == prod.Id);
-            if (favoriteProductIds.Contains(product.Id))
+            var product = await _context.Products.AsNoTracking().Include(pro=> pro.Category).FirstOrDefaultAsync(prod => productId == prod.Id);
+            if (product != null && favoriteProductIds.Contains(product.Id))
             {
                 product.IsFavorite = true;
             }
@@ -107,7 +110,6 @@ namespace Rahtk.Infrastructure.EF.Repositories
             var product = await _context.Products.FindAsync(ProductId);
             product.Deleted = true;
             _context.Entry(product).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
             return true;
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace Rahtk.Shared.Models
+namespace Rahtk.Shared.Models
 {
     public readonly struct Result<T, E>
     {

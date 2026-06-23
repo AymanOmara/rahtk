@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Rahtk.Domain.Features.Order;
 using Rahtk.Domain.Features.Product;
-using Rahtk.Domain.Features.Products;
+using Rahtk.Domain.Features.Product;
 using Rahtk.Domain.Features.Reminder;
 using Rahtk.Domain.Features.User;
 
